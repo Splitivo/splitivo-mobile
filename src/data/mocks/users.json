@@ -1,0 +1,25 @@
+{
+  "currentUser": {
+    "id": "u1",
+    "username": "johndoe",
+    "displayName": "John Doe",
+    "email": "john@example.com",
+    "phone": "+1234567890",
+    "avatarUrl": null,
+    "baseCurrency": "USD",
+    "bankAccounts": [
+      {
+        "id": "ba1",
+        "bankName": "Chase",
+        "accountNumber": "****1234",
+        "isDefault": true
+      },
+      {
+        "id": "ba2",
+        "bankName": "Bank of America",
+        "accountNumber": "****5678",
+        "isDefault": false
+      }
+    ]
+  }
+}

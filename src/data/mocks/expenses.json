@@ -1,0 +1,92 @@
+[
+  {
+    "id": "e1",
+    "billId": "b1",
+    "merchantName": "Pizza Palace",
+    "category": "food_dining",
+    "amount": 60.2,
+    "currency": "USD",
+    "date": "2026-04-12"
+  },
+  {
+    "id": "e2",
+    "billId": "b2",
+    "merchantName": "Coffee Corner",
+    "category": "food_dining",
+    "amount": 19.8,
+    "currency": "USD",
+    "date": "2026-04-10"
+  },
+  {
+    "id": "e3",
+    "billId": "b3",
+    "merchantName": "Bali Seafood Grill",
+    "category": "food_dining",
+    "amount": 142.5,
+    "currency": "USD",
+    "date": "2026-03-16"
+  },
+  {
+    "id": "e4",
+    "billId": "b4",
+    "merchantName": "Surf & Turf",
+    "category": "entertainment",
+    "amount": 166.0,
+    "currency": "USD",
+    "date": "2026-03-18"
+  },
+  {
+    "id": "e5",
+    "billId": "b5",
+    "merchantName": "Warung Makan",
+    "category": "food_dining",
+    "amount": 80.0,
+    "currency": "USD",
+    "date": "2026-03-20"
+  },
+  {
+    "id": "e6",
+    "billId": "b6",
+    "merchantName": "Sushi Dai",
+    "category": "food_dining",
+    "amount": 220.0,
+    "currency": "USD",
+    "date": "2026-02-02"
+  },
+  {
+    "id": "e7",
+    "billId": null,
+    "merchantName": "Uber Ride",
+    "category": "transport",
+    "amount": 24.5,
+    "currency": "USD",
+    "date": "2026-04-08"
+  },
+  {
+    "id": "e8",
+    "billId": null,
+    "merchantName": "H&M",
+    "category": "shopping",
+    "amount": 89.0,
+    "currency": "USD",
+    "date": "2026-04-05"
+  },
+  {
+    "id": "e9",
+    "billId": null,
+    "merchantName": "Whole Foods",
+    "category": "groceries",
+    "amount": 67.3,
+    "currency": "USD",
+    "date": "2026-04-03"
+  },
+  {
+    "id": "e10",
+    "billId": null,
+    "merchantName": "Electric Bill",
+    "category": "utilities",
+    "amount": 120.0,
+    "currency": "USD",
+    "date": "2026-04-01"
+  }
+]

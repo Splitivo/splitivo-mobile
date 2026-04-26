@@ -1,0 +1,173 @@
+[
+  {
+    "id": "t1",
+    "name": "Bali Trip 2026",
+    "startDate": "2026-03-15",
+    "endDate": "2026-03-22",
+    "participants": [
+      {
+        "id": "u1",
+        "displayName": "John Doe",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p1",
+        "displayName": "Alice Chen",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p2",
+        "displayName": "Bob Wilson",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p3",
+        "displayName": "Charlie Kim",
+        "avatarUrl": null,
+        "isGuest": false
+      }
+    ],
+    "currency": "IDR",
+    "billIds": ["b3", "b4", "b5"],
+    "totalSpend": 6988000,
+    "status": "active",
+    "createdBy": "u1",
+    "createdAt": "2026-03-10T10:00:00Z",
+    "isFinalized": false
+  },
+  {
+    "id": "t3",
+    "name": "Las Vegas Spring",
+    "startDate": "2026-04-10",
+    "endDate": "2026-04-14",
+    "participants": [
+      {
+        "id": "u1",
+        "displayName": "John Doe",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p5",
+        "displayName": "Emma Johnson",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p6",
+        "displayName": "Frank Miller",
+        "avatarUrl": null,
+        "isGuest": false
+      }
+    ],
+    "currency": "USD",
+    "billIds": ["b7", "b8"],
+    "totalSpend": 2847,
+    "status": "active",
+    "createdBy": "u1",
+    "createdAt": "2026-03-20T14:30:00Z",
+    "isFinalized": false
+  },
+  {
+    "id": "t4",
+    "name": "Paris Summer Getaway",
+    "startDate": "2026-06-01",
+    "endDate": "2026-06-10",
+    "participants": [
+      {
+        "id": "u1",
+        "displayName": "John Doe",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p1",
+        "displayName": "Alice Chen",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p7",
+        "displayName": "Grace Martinez",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p8",
+        "displayName": "Henry Garcia",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p9",
+        "displayName": "Ivy Rodriguez",
+        "avatarUrl": null,
+        "isGuest": false
+      }
+    ],
+    "currency": "EUR",
+    "billIds": ["b9", "b10", "b11", "b12"],
+    "totalSpend": 4250,
+    "status": "active",
+    "createdBy": "u1",
+    "createdAt": "2026-04-01T09:15:00Z",
+    "isFinalized": false
+  },
+  {
+    "id": "t5",
+    "name": "Mountain Retreat",
+    "startDate": "2026-05-15",
+    "endDate": "2026-05-18",
+    "participants": [
+      {
+        "id": "u1",
+        "displayName": "John Doe",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p2",
+        "displayName": "Bob Wilson",
+        "avatarUrl": null,
+        "isGuest": false
+      }
+    ],
+    "currency": "USD",
+    "billIds": ["b13", "b14"],
+    "totalSpend": 1560,
+    "status": "active",
+    "createdBy": "u1",
+    "createdAt": "2026-04-15T16:45:00Z",
+    "isFinalized": false
+  },
+  {
+    "id": "t2",
+    "name": "Tokyo Weekend",
+    "startDate": "2026-02-01",
+    "endDate": "2026-02-03",
+    "participants": [
+      {
+        "id": "u1",
+        "displayName": "John Doe",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p4",
+        "displayName": "Diana Park",
+        "avatarUrl": null,
+        "isGuest": false
+      }
+    ],
+    "currency": "JPY",
+    "billIds": ["b6"],
+    "totalSpend": 33000,
+    "status": "completed",
+    "createdBy": "u1",
+    "createdAt": "2026-01-25T08:00:00Z",
+    "isFinalized": true
+  }
+]

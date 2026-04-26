@@ -1,0 +1,15 @@
+{
+  "merchantName": "The Grand Bistro",
+  "date": "2026-04-15",
+  "items": [
+    { "name": "Caesar Salad", "quantity": 1, "unitPrice": 14.5 },
+    { "name": "Grilled Salmon", "quantity": 1, "unitPrice": 28.0 },
+    { "name": "Pasta Carbonara", "quantity": 1, "unitPrice": 22.0 },
+    { "name": "Tiramisu", "quantity": 2, "unitPrice": 9.5 },
+    { "name": "Sparkling Water", "quantity": 2, "unitPrice": 4.0 }
+  ],
+  "tax": 9.15,
+  "serviceCharge": 6.1,
+  "total": 106.75,
+  "currency": "USD"
+}

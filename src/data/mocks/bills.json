@@ -1,0 +1,361 @@
+[
+  {
+    "id": "b1",
+    "tripId": null,
+    "merchantName": "Pizza Palace",
+    "date": "2026-04-12",
+    "currency": "USD",
+    "category": "food_dining",
+    "items": [
+      {
+        "id": "i1",
+        "name": "Margherita Pizza",
+        "quantity": 1,
+        "unitPrice": 15.0,
+        "assignedTo": ["u1", "p1"]
+      },
+      {
+        "id": "i2",
+        "name": "Pepperoni Pizza",
+        "quantity": 1,
+        "unitPrice": 18.0,
+        "assignedTo": ["u1", "p2"]
+      },
+      {
+        "id": "i3",
+        "name": "Garlic Bread",
+        "quantity": 2,
+        "unitPrice": 5.5,
+        "assignedTo": ["u1", "p1", "p2"]
+      },
+      {
+        "id": "i4",
+        "name": "Coke",
+        "quantity": 3,
+        "unitPrice": 3.0,
+        "assignedTo": ["u1", "p1", "p2"]
+      }
+    ],
+    "tax": 5.2,
+    "serviceCharge": 4.0,
+    "discount": 0,
+    "totalAmount": 60.2,
+    "participants": [
+      {
+        "id": "u1",
+        "displayName": "John Doe",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p1",
+        "displayName": "Alice Chen",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p2",
+        "displayName": "Bob Wilson",
+        "avatarUrl": null,
+        "isGuest": false
+      }
+    ],
+    "splitType": "single",
+    "status": "pending",
+    "createdBy": "u1",
+    "createdAt": "2026-04-12T19:30:00Z",
+    "isFinalized": false
+  },
+  {
+    "id": "b2",
+    "tripId": null,
+    "merchantName": "Coffee Corner",
+    "date": "2026-04-10",
+    "currency": "USD",
+    "category": "food_dining",
+    "items": [
+      {
+        "id": "i5",
+        "name": "Latte",
+        "quantity": 2,
+        "unitPrice": 5.5,
+        "assignedTo": ["u1", "p3"]
+      },
+      {
+        "id": "i6",
+        "name": "Croissant",
+        "quantity": 2,
+        "unitPrice": 3.5,
+        "assignedTo": ["u1", "p3"]
+      }
+    ],
+    "tax": 1.8,
+    "serviceCharge": 0,
+    "discount": 0,
+    "totalAmount": 19.8,
+    "participants": [
+      {
+        "id": "u1",
+        "displayName": "John Doe",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p3",
+        "displayName": "Charlie Kim",
+        "avatarUrl": null,
+        "isGuest": false
+      }
+    ],
+    "splitType": "single",
+    "status": "settled",
+    "createdBy": "u1",
+    "createdAt": "2026-04-10T10:15:00Z",
+    "isFinalized": true
+  },
+  {
+    "id": "b3",
+    "tripId": "t1",
+    "merchantName": "Bali Seafood Grill",
+    "date": "2026-03-16",
+    "currency": "IDR",
+    "category": "food_dining",
+    "items": [
+      {
+        "id": "i7",
+        "name": "Grilled Lobster",
+        "quantity": 2,
+        "unitPrice": 550000,
+        "assignedTo": ["u1", "p1"]
+      },
+      {
+        "id": "i8",
+        "name": "Fish Tacos",
+        "quantity": 1,
+        "unitPrice": 280000,
+        "assignedTo": ["p2"]
+      },
+      {
+        "id": "i9",
+        "name": "Coconut Juice",
+        "quantity": 4,
+        "unitPrice": 65000,
+        "assignedTo": ["u1", "p1", "p2", "p3"]
+      },
+      {
+        "id": "i10",
+        "name": "Rice Bowl",
+        "quantity": 2,
+        "unitPrice": 120000,
+        "assignedTo": ["p3", "p2"]
+      }
+    ],
+    "tax": 178000,
+    "serviceCharge": 130000,
+    "discount": 0,
+    "totalAmount": 2008000,
+    "participants": [
+      {
+        "id": "u1",
+        "displayName": "John Doe",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p1",
+        "displayName": "Alice Chen",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p2",
+        "displayName": "Bob Wilson",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p3",
+        "displayName": "Charlie Kim",
+        "avatarUrl": null,
+        "isGuest": false
+      }
+    ],
+    "splitType": "trip",
+    "status": "pending",
+    "createdBy": "u1",
+    "createdAt": "2026-03-16T20:00:00Z",
+    "isFinalized": false
+  },
+  {
+    "id": "b4",
+    "tripId": "t1",
+    "merchantName": "Surf & Turf",
+    "date": "2026-03-18",
+    "currency": "IDR",
+    "category": "entertainment",
+    "items": [
+      {
+        "id": "i11",
+        "name": "Surf Lesson",
+        "quantity": 4,
+        "unitPrice": 400000,
+        "assignedTo": ["u1", "p1", "p2", "p3"]
+      },
+      {
+        "id": "i12",
+        "name": "Board Rental",
+        "quantity": 4,
+        "unitPrice": 240000,
+        "assignedTo": ["u1", "p1", "p2", "p3"]
+      }
+    ],
+    "tax": 256000,
+    "serviceCharge": 0,
+    "discount": 160000,
+    "totalAmount": 2656000,
+    "participants": [
+      {
+        "id": "u1",
+        "displayName": "John Doe",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p1",
+        "displayName": "Alice Chen",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p2",
+        "displayName": "Bob Wilson",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p3",
+        "displayName": "Charlie Kim",
+        "avatarUrl": null,
+        "isGuest": false
+      }
+    ],
+    "splitType": "trip",
+    "status": "pending",
+    "createdBy": "p1",
+    "createdAt": "2026-03-18T14:00:00Z",
+    "isFinalized": false
+  },
+  {
+    "id": "b5",
+    "tripId": "t1",
+    "merchantName": "Warung Makan",
+    "date": "2026-03-20",
+    "currency": "IDR",
+    "category": "food_dining",
+    "items": [
+      {
+        "id": "i13",
+        "name": "Nasi Goreng",
+        "quantity": 3,
+        "unitPrice": 125000,
+        "assignedTo": ["u1", "p2", "p3"]
+      },
+      {
+        "id": "i14",
+        "name": "Satay Skewers",
+        "quantity": 2,
+        "unitPrice": 185000,
+        "assignedTo": ["u1", "p1"]
+      },
+      {
+        "id": "i15",
+        "name": "Bintang Beer",
+        "quantity": 4,
+        "unitPrice": 80000,
+        "assignedTo": ["u1", "p1", "p2", "p3"]
+      }
+    ],
+    "tax": 109000,
+    "serviceCharge": 75000,
+    "discount": 0,
+    "totalAmount": 1279000,
+    "participants": [
+      {
+        "id": "u1",
+        "displayName": "John Doe",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p1",
+        "displayName": "Alice Chen",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p2",
+        "displayName": "Bob Wilson",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p3",
+        "displayName": "Charlie Kim",
+        "avatarUrl": null,
+        "isGuest": false
+      }
+    ],
+    "splitType": "trip",
+    "status": "pending",
+    "createdBy": "u1",
+    "createdAt": "2026-03-20T19:30:00Z",
+    "isFinalized": false
+  },
+  {
+    "id": "b6",
+    "tripId": "t2",
+    "merchantName": "Sushi Dai",
+    "date": "2026-02-02",
+    "currency": "JPY",
+    "category": "food_dining",
+    "items": [
+      {
+        "id": "i16",
+        "name": "Omakase Set",
+        "quantity": 2,
+        "unitPrice": 12800,
+        "assignedTo": ["u1", "p4"]
+      },
+      {
+        "id": "i17",
+        "name": "Sake",
+        "quantity": 1,
+        "unitPrice": 4500,
+        "assignedTo": ["u1", "p4"]
+      }
+    ],
+    "tax": 3010,
+    "serviceCharge": 0,
+    "discount": 0,
+    "totalAmount": 33110,
+    "participants": [
+      {
+        "id": "u1",
+        "displayName": "John Doe",
+        "avatarUrl": null,
+        "isGuest": false
+      },
+      {
+        "id": "p4",
+        "displayName": "Diana Park",
+        "avatarUrl": null,
+        "isGuest": false
+      }
+    ],
+    "splitType": "trip",
+    "status": "settled",
+    "createdBy": "u1",
+    "createdAt": "2026-02-02T20:00:00Z",
+    "isFinalized": true
+  }
+]
