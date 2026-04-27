@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ScreenContainer } from "../../../src/presentation/components/ScreenContainer";
 import { router, useLocalSearchParams } from "expo-router";
 import { useTheme } from "../../../src/core/theme";
 import { Button } from "../../../src/presentation/components/Button";
@@ -12,13 +12,11 @@ export default function AddBillScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: colors.bg.primary }]}
+    <ScreenContainer
+      title="Add Bill"
+      navBarLeading={{ type: "backButton" }}
+      isLargeTitle={false}
     >
-      <Text style={[styles.title, { color: colors.text.primary }]}>
-        Add Bill to Trip
-      </Text>
-
       <GlassCard
         style={styles.option}
         onPress={() => router.push("/split/scan")}
@@ -70,12 +68,12 @@ export default function AddBillScreen() {
         fullWidth
         style={{ marginTop: 16 }}
       />
-    </SafeAreaView>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingHorizontal: 20, paddingTop: 16 },
+  container: { flex: 1 },
   title: { fontSize: 22, fontWeight: "700", marginBottom: 20 },
   option: { marginBottom: 12 },
   optionTitle: { fontSize: 17, fontWeight: "600", marginBottom: 4 },

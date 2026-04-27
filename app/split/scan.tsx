@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ScreenContainer } from "../../src/presentation/components/ScreenContainer";
 import { router } from "expo-router";
 import { useTheme } from "../../src/core/theme";
 import { Button } from "../../src/presentation/components/Button";
+import { ArrowLeft } from "lucide-react-native";
 
 export default function ScanScreen() {
   const { colors } = useTheme();
@@ -16,11 +17,15 @@ export default function ScanScreen() {
   };
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: colors.bg.primary }]}
-    >
-      {/* Currency Selector */}
+    <ScreenContainer>
+      {/* Header */}
       <View style={styles.header}>
+        <Pressable onPress={() => router.back()} hitSlop={8}>
+          <ArrowLeft size={22} color={colors.text.primary} />
+        </Pressable>
+        <Text style={[styles.headerTitle, { color: colors.text.primary }]}>
+          Scan Receipt
+        </Text>
         <Pressable
           style={[
             styles.currencyPill,
@@ -95,13 +100,20 @@ export default function ScanScreen() {
           </Text>
         </Pressable>
       </View>
-    </SafeAreaView>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  header: { alignItems: "center", paddingVertical: 16 },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+  },
+  headerTitle: { fontSize: 17, fontWeight: "600" },
   currencyPill: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20 },
   currencyText: { fontSize: 14, fontWeight: "600" },
   viewfinder: { flex: 1, justifyContent: "center", alignItems: "center" },

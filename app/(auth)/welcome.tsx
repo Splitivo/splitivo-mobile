@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ScreenContainer } from "../../src/presentation/components/ScreenContainer";
 import { router } from "expo-router";
 import { useTheme } from "../../src/core/theme";
 import { GlassCard } from "../../src/presentation/components/GlassCard";
@@ -10,9 +10,7 @@ export default function WelcomeScreen() {
   const { colors } = useTheme();
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: colors.bg.primary }]}
-    >
+    <ScreenContainer>
       <View style={styles.content}>
         <View style={styles.header}>
           <Text style={[styles.logo, { color: colors.accent.primary }]}>
@@ -47,14 +45,11 @@ export default function WelcomeScreen() {
           />
         </GlassCard>
       </View>
-    </SafeAreaView>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   content: {
     flex: 1,
     justifyContent: "center",

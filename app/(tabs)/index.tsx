@@ -69,7 +69,6 @@ export default function HomeScreen() {
   return (
     <ScreenContainer>
       <ScrollView
-        contentInset={{ top: insets.top }}
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
       >

@@ -7,7 +7,7 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ScreenContainer } from "../../src/presentation/components/ScreenContainer";
 import { router } from "expo-router";
 import { useTheme } from "../../src/core/theme";
 import { useTripStore } from "../../src/presentation/stores/useTripStore";
@@ -74,106 +74,98 @@ export default function CreateTripScreen() {
   };
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: colors.bg.primary }]}
+    <ScreenContainer
+      title="New Trip"
+      navBarLeading={{ type: "backButton" }}
+      isLargeTitle={false}
     >
-      <ScrollView
-        contentContainerStyle={styles.scroll}
-        showsVerticalScrollIndicator={false}
-      >
-        <Text style={[styles.title, { color: colors.text.primary }]}>
-          New Trip
-        </Text>
+      <Input
+        label="Trip Name"
+        placeholder="e.g. Bali Trip 2026"
+        value={name}
+        onChangeText={setName}
+      />
+      <Input
+        label="Start Date"
+        placeholder="YYYY-MM-DD"
+        value={startDate}
+        onChangeText={setStartDate}
+      />
+      <Input
+        label="End Date (optional)"
+        placeholder="YYYY-MM-DD"
+        value={endDate}
+        onChangeText={setEndDate}
+      />
+      <Input
+        label="Currency"
+        placeholder="IDR"
+        value={currency}
+        onChangeText={setCurrency}
+      />
 
-        <Input
-          label="Trip Name"
-          placeholder="e.g. Bali Trip 2026"
-          value={name}
-          onChangeText={setName}
-        />
-        <Input
-          label="Start Date"
-          placeholder="YYYY-MM-DD"
-          value={startDate}
-          onChangeText={setStartDate}
-        />
-        <Input
-          label="End Date (optional)"
-          placeholder="YYYY-MM-DD"
-          value={endDate}
-          onChangeText={setEndDate}
-        />
-        <Input
-          label="Currency"
-          placeholder="IDR"
-          value={currency}
-          onChangeText={setCurrency}
-        />
+      {/* Participants */}
+      <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>
+        Participants
+      </Text>
 
-        {/* Participants */}
-        <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>
-          Participants
-        </Text>
-
-        {/* Self */}
-        {user && (
-          <View style={styles.personRow}>
-            <Avatar name={user.displayName} size={36} />
-            <Text style={[styles.personName, { color: colors.text.primary }]}>
-              {user.displayName} (You)
-            </Text>
-          </View>
-        )}
-
-        {participants.map((p) => {
-          const pName = p.isGuest ? p.name : p.displayName;
-          return (
-            <View key={p.id} style={styles.personRow}>
-              <Avatar name={pName} size={36} />
-              <Text style={[styles.personName, { color: colors.text.primary }]}>
-                {pName}
-              </Text>
-              <Pressable onPress={() => removeParticipant(p.id)}>
-                <XCircle size={22} color={colors.status.error} />
-              </Pressable>
-            </View>
-          );
-        })}
-
-        <View style={styles.addRow}>
-          <TextInput
-            placeholder="Add guest name"
-            placeholderTextColor={colors.text.tertiary}
-            value={guestName}
-            onChangeText={setGuestName}
-            onSubmitEditing={addGuest}
-            style={[
-              styles.guestInput,
-              {
-                color: colors.text.primary,
-                backgroundColor: colors.bg.input,
-                borderColor: colors.border.default,
-              },
-            ]}
-          />
-          <Button title="Add" size="sm" onPress={addGuest} />
+      {/* Self */}
+      {user && (
+        <View style={styles.personRow}>
+          <Avatar name={user.displayName} size={36} />
+          <Text style={[styles.personName, { color: colors.text.primary }]}>
+            {user.displayName} (You)
+          </Text>
         </View>
+      )}
 
-        <Button
-          title="Create Trip"
-          onPress={handleCreate}
-          fullWidth
-          size="lg"
-          style={{ marginTop: 24, marginBottom: 32 }}
+      {participants.map((p) => {
+        const pName = p.isGuest ? p.name : p.displayName;
+        return (
+          <View key={p.id} style={styles.personRow}>
+            <Avatar name={pName} size={36} />
+            <Text style={[styles.personName, { color: colors.text.primary }]}>
+              {pName}
+            </Text>
+            <Pressable onPress={() => removeParticipant(p.id)}>
+              <XCircle size={22} color={colors.status.error} />
+            </Pressable>
+          </View>
+        );
+      })}
+
+      <View style={styles.addRow}>
+        <TextInput
+          placeholder="Add guest name"
+          placeholderTextColor={colors.text.tertiary}
+          value={guestName}
+          onChangeText={setGuestName}
+          onSubmitEditing={addGuest}
+          style={[
+            styles.guestInput,
+            {
+              color: colors.text.primary,
+              backgroundColor: colors.bg.input,
+              borderColor: colors.border.default,
+            },
+          ]}
         />
-      </ScrollView>
-    </SafeAreaView>
+        <Button title="Add" size="sm" onPress={addGuest} />
+      </View>
+
+      <Button
+        title="Create Trip"
+        onPress={handleCreate}
+        fullWidth
+        size="lg"
+        style={{ marginTop: 24, marginBottom: 32 }}
+      />
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  scroll: { paddingHorizontal: 20, paddingTop: 8 },
   title: { fontSize: 24, fontWeight: "700", marginBottom: 20 },
   sectionTitle: {
     fontSize: 18,

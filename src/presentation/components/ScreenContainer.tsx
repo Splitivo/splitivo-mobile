@@ -43,6 +43,11 @@ interface ScreenContainerProps {
   isLargeTitle?: boolean;
   /** Extra style for the scroll content container (only used when title is set). */
   contentContainerStyle?: ViewStyle;
+  /**
+   * When provided, the nav bar is always visible and shows this text initially,
+   * crossfading into `title` as the large title scrolls away.
+   */
+  navBarTitle?: string;
 }
 
 /**
@@ -61,6 +66,7 @@ export function ScreenContainer({
   navBarTrailing,
   isLargeTitle = true,
   contentContainerStyle,
+  navBarTitle,
 }: ScreenContainerProps) {
   const insets = useSafeAreaInsets();
   const { resolvedMode, colors } = useTheme();
@@ -77,8 +83,16 @@ export function ScreenContainer({
     extrapolate: "clamp",
   });
 
-  // When not large title, nav bar is always fully visible
-  const resolvedNavBarOpacity = isLargeTitle ? navBarOpacity : 1;
+  // Inverse opacity: fades out as user scrolls (used for navBarTitle crossfade)
+  const pageNavBarOpacity = scrollY.interpolate({
+    inputRange: [COLLAPSE_START, COLLAPSE_END],
+    outputRange: [1, 0],
+    extrapolate: "clamp",
+  });
+
+  // When not large title, or navBarTitle is provided, nav bar is always fully visible
+  const resolvedNavBarOpacity =
+    isLargeTitle && !navBarTitle ? navBarOpacity : 1;
 
   const navBarContent = (
     <>
@@ -93,12 +107,45 @@ export function ScreenContainer({
             <NavBarItemView item={navBarLeading} colors={colors} />
           </View>
         ) : null}
-        <Text
-          style={[styles.navBarTitle, { color: colors.text.primary }]}
-          numberOfLines={1}
-        >
-          {title}
-        </Text>
+        {navBarTitle ? (
+          <View style={styles.navBarTitleContainer}>
+            <Animated.View
+              style={[
+                StyleSheet.absoluteFillObject,
+                styles.navBarTitleInner,
+                { opacity: pageNavBarOpacity },
+              ]}
+            >
+              <Text
+                style={[styles.navBarTitle, { color: colors.text.primary }]}
+                numberOfLines={1}
+              >
+                {navBarTitle}
+              </Text>
+            </Animated.View>
+            <Animated.View
+              style={[
+                StyleSheet.absoluteFillObject,
+                styles.navBarTitleInner,
+                { opacity: navBarOpacity },
+              ]}
+            >
+              <Text
+                style={[styles.navBarTitle, { color: colors.text.primary }]}
+                numberOfLines={1}
+              >
+                {title}
+              </Text>
+            </Animated.View>
+          </View>
+        ) : (
+          <Text
+            style={[styles.navBarTitle, { color: colors.text.primary }]}
+            numberOfLines={1}
+          >
+            {title}
+          </Text>
+        )}
         {navBarTrailing ? (
           <View style={styles.navBarTrailing}>
             <NavBarItemView item={navBarTrailing} colors={colors} />
@@ -130,7 +177,10 @@ export function ScreenContainer({
           <Animated.ScrollView
             contentContainerStyle={[
               {
-                paddingTop: isLargeTitle ? insets.top + 16 : NAV_BAR_TOTAL + 8,
+                paddingTop:
+                  isLargeTitle && !navBarTitle
+                    ? insets.top + 16
+                    : NAV_BAR_TOTAL + 8,
                 paddingHorizontal: 20,
               },
               contentContainerStyle,
@@ -188,7 +238,9 @@ export function ScreenContainer({
           )}
         </>
       ) : (
-        <View style={styles.content}>{children}</View>
+        <View style={[styles.content, { paddingTop: insets.top }]}>
+          {children}
+        </View>
       )}
     </View>
   );
@@ -253,8 +305,15 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: "600",
     letterSpacing: -0.3,
-    flex: 1,
     textAlign: "center",
+  },
+  navBarTitleContainer: {
+    flex: 1,
+    height: 44,
+  },
+  navBarTitleInner: {
+    alignItems: "center",
+    justifyContent: "center",
   },
   navBarLeading: { position: "absolute", left: 16 },
   navBarTrailing: { position: "absolute", right: 16 },

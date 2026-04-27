@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { View, Text, ScrollView, StyleSheet, Pressable } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, Text, StyleSheet, Pressable } from "react-native";
+import { ScreenContainer } from "../../src/presentation/components/ScreenContainer";
 import { router } from "expo-router";
 import { useTheme } from "../../src/core/theme";
 import { useBillStore } from "../../src/presentation/stores/useBillStore";
@@ -70,186 +70,177 @@ export default function ConfirmScreen() {
   };
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: colors.bg.primary }]}
+    <ScreenContainer
+      title={draftMerchant || "Confirm Bill"}
+      navBarLeading={{ type: "backButton" }}
+      isLargeTitle={false}
     >
-      <ScrollView
-        contentContainerStyle={styles.scroll}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={[styles.title, { color: colors.text.primary }]}>
-            {draftMerchant || "Confirm Bill"}
+      {/* Header meta */}
+      <View style={styles.header}>
+        <View style={styles.headerMeta}>
+          <Text style={[styles.headerDate, { color: colors.text.secondary }]}>
+            {draftDate}
           </Text>
-          <View style={styles.headerMeta}>
-            <Text style={[styles.headerDate, { color: colors.text.secondary }]}>
-              {draftDate}
+          <View
+            style={[
+              styles.currencyBadge,
+              { backgroundColor: colors.bg.container },
+            ]}
+          >
+            <Text style={[styles.currencyText, { color: colors.text.primary }]}>
+              {draftCurrency}
             </Text>
-            <View
-              style={[
-                styles.currencyBadge,
-                { backgroundColor: colors.bg.container },
-              ]}
-            >
-              <Text
-                style={[styles.currencyText, { color: colors.text.primary }]}
-              >
-                {draftCurrency}
-              </Text>
-            </View>
           </View>
         </View>
+      </View>
 
-        {/* Items */}
-        {draftItems.map((item) => (
-          <GlassCard key={item.id} style={styles.itemCard}>
-            <View style={styles.itemHeader}>
-              <Text style={[styles.itemName, { color: colors.text.primary }]}>
-                {item.name || "Unnamed item"}
-              </Text>
-              <Text style={[styles.itemPrice, { color: colors.text.primary }]}>
-                {formatCurrency(item.quantity * item.unitPrice, draftCurrency)}
-              </Text>
-            </View>
-            <Text style={[styles.itemDetail, { color: colors.text.secondary }]}>
-              {item.quantity} × {formatCurrency(item.unitPrice, draftCurrency)}
-              {item.assignedTo.length > 1 && ` · ÷${item.assignedTo.length}`}
+      {/* Items */}
+      {draftItems.map((item) => (
+        <GlassCard key={item.id} style={styles.itemCard}>
+          <View style={styles.itemHeader}>
+            <Text style={[styles.itemName, { color: colors.text.primary }]}>
+              {item.name || "Unnamed item"}
             </Text>
+            <Text style={[styles.itemPrice, { color: colors.text.primary }]}>
+              {formatCurrency(item.quantity * item.unitPrice, draftCurrency)}
+            </Text>
+          </View>
+          <Text style={[styles.itemDetail, { color: colors.text.secondary }]}>
+            {item.quantity} × {formatCurrency(item.unitPrice, draftCurrency)}
+            {item.assignedTo.length > 1 && ` · ÷${item.assignedTo.length}`}
+          </Text>
 
-            {/* Person chips */}
-            <View style={styles.personChips}>
-              {draftParticipants.map((person) => {
-                const isAssigned = item.assignedTo.includes(person.id);
-                const name = person.isGuest ? person.name : person.displayName;
-                return (
-                  <Pressable
-                    key={person.id}
-                    onPress={() => togglePersonForItem(item.id, person.id)}
+          {/* Person chips */}
+          <View style={styles.personChips}>
+            {draftParticipants.map((person) => {
+              const isAssigned = item.assignedTo.includes(person.id);
+              const name = person.isGuest ? person.name : person.displayName;
+              return (
+                <Pressable
+                  key={person.id}
+                  onPress={() => togglePersonForItem(item.id, person.id)}
+                  style={[
+                    styles.personChip,
+                    {
+                      backgroundColor: isAssigned
+                        ? colors.accent.primary + "30"
+                        : colors.bg.input,
+                      borderColor: isAssigned
+                        ? colors.accent.primary
+                        : colors.border.default,
+                    },
+                  ]}
+                >
+                  <Text
                     style={[
-                      styles.personChip,
+                      styles.personChipText,
                       {
-                        backgroundColor: isAssigned
-                          ? colors.accent.primary + "30"
-                          : colors.bg.input,
-                        borderColor: isAssigned
+                        color: isAssigned
                           ? colors.accent.primary
-                          : colors.border.default,
+                          : colors.text.secondary,
                       },
                     ]}
                   >
-                    <Text
-                      style={[
-                        styles.personChipText,
-                        {
-                          color: isAssigned
-                            ? colors.accent.primary
-                            : colors.text.secondary,
-                        },
-                      ]}
-                    >
-                      {name}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-          </GlassCard>
-        ))}
-
-        {/* Shared Costs */}
-        <GlassCard style={styles.sharedCosts}>
-          <Text style={[styles.sectionLabel, { color: colors.text.primary }]}>
-            Shared Costs
-          </Text>
-          {draftTax > 0 && (
-            <View style={styles.costRow}>
-              <Text style={{ color: colors.text.secondary }}>Tax</Text>
-              <Text style={{ color: colors.text.primary }}>
-                {formatCurrency(draftTax, draftCurrency)}
-              </Text>
-            </View>
-          )}
-          {draftServiceCharge > 0 && (
-            <View style={styles.costRow}>
-              <Text style={{ color: colors.text.secondary }}>Service</Text>
-              <Text style={{ color: colors.text.primary }}>
-                {formatCurrency(draftServiceCharge, draftCurrency)}
-              </Text>
-            </View>
-          )}
-          {draftDiscount > 0 && (
-            <View style={styles.costRow}>
-              <Text style={{ color: colors.text.secondary }}>Discount</Text>
-              <Text style={{ color: colors.status.success }}>
-                -{formatCurrency(draftDiscount, draftCurrency)}
-              </Text>
-            </View>
-          )}
+                    {name}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
         </GlassCard>
+      ))}
 
-        {/* People */}
-        <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>
-          People
+      {/* Shared Costs */}
+      <GlassCard style={styles.sharedCosts}>
+        <Text style={[styles.sectionLabel, { color: colors.text.primary }]}>
+          Shared Costs
         </Text>
-        {draftParticipants.map((person) => {
-          const name = person.isGuest ? person.name : person.displayName;
-          const total = personTotals.get(person.id) || 0;
-          return (
-            <View key={person.id} style={styles.personRow}>
-              <Avatar name={name} size={36} />
-              <Text style={[styles.personName, { color: colors.text.primary }]}>
-                {name}
-              </Text>
-              <Text
-                style={[styles.personAmount, { color: colors.accent.primary }]}
-              >
-                {formatCurrency(total, draftCurrency)}
-              </Text>
-            </View>
-          );
-        })}
+        {draftTax > 0 && (
+          <View style={styles.costRow}>
+            <Text style={{ color: colors.text.secondary }}>Tax</Text>
+            <Text style={{ color: colors.text.primary }}>
+              {formatCurrency(draftTax, draftCurrency)}
+            </Text>
+          </View>
+        )}
+        {draftServiceCharge > 0 && (
+          <View style={styles.costRow}>
+            <Text style={{ color: colors.text.secondary }}>Service</Text>
+            <Text style={{ color: colors.text.primary }}>
+              {formatCurrency(draftServiceCharge, draftCurrency)}
+            </Text>
+          </View>
+        )}
+        {draftDiscount > 0 && (
+          <View style={styles.costRow}>
+            <Text style={{ color: colors.text.secondary }}>Discount</Text>
+            <Text style={{ color: colors.status.success }}>
+              -{formatCurrency(draftDiscount, draftCurrency)}
+            </Text>
+          </View>
+        )}
+      </GlassCard>
 
-        <Button
-          title="+ Add Person"
-          variant="secondary"
-          onPress={() => {
-            // Add a mock guest for now
-            addDraftParticipant({
-              id: `guest_${Date.now()}`,
-              name: `Guest ${draftParticipants.length + 1}`,
-              isGuest: true,
-            });
-          }}
-          fullWidth
-          style={{ marginTop: 8 }}
-        />
+      {/* People */}
+      <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>
+        People
+      </Text>
+      {draftParticipants.map((person) => {
+        const name = person.isGuest ? person.name : person.displayName;
+        const total = personTotals.get(person.id) || 0;
+        return (
+          <View key={person.id} style={styles.personRow}>
+            <Avatar name={name} size={36} />
+            <Text style={[styles.personName, { color: colors.text.primary }]}>
+              {name}
+            </Text>
+            <Text
+              style={[styles.personAmount, { color: colors.accent.primary }]}
+            >
+              {formatCurrency(total, draftCurrency)}
+            </Text>
+          </View>
+        );
+      })}
 
-        {/* Summary */}
-        <GlassCard style={styles.summaryCard}>
-          <Text style={[styles.totalLabel, { color: colors.text.secondary }]}>
-            Total
-          </Text>
-          <Text style={[styles.totalValue, { color: colors.text.primary }]}>
-            {formatCurrency(grandTotal, draftCurrency)}
-          </Text>
-        </GlassCard>
+      <Button
+        title="+ Add Person"
+        variant="secondary"
+        onPress={() => {
+          // Add a mock guest for now
+          addDraftParticipant({
+            id: `guest_${Date.now()}`,
+            name: `Guest ${draftParticipants.length + 1}`,
+            isGuest: true,
+          });
+        }}
+        fullWidth
+        style={{ marginTop: 8 }}
+      />
 
-        <Button
-          title="Confirm Split"
-          onPress={handleConfirm}
-          fullWidth
-          size="lg"
-          style={{ marginTop: 16, marginBottom: 32 }}
-        />
-      </ScrollView>
-    </SafeAreaView>
+      {/* Summary */}
+      <GlassCard style={styles.summaryCard}>
+        <Text style={[styles.totalLabel, { color: colors.text.secondary }]}>
+          Total
+        </Text>
+        <Text style={[styles.totalValue, { color: colors.text.primary }]}>
+          {formatCurrency(grandTotal, draftCurrency)}
+        </Text>
+      </GlassCard>
+
+      <Button
+        title="Confirm Split"
+        onPress={handleConfirm}
+        fullWidth
+        size="lg"
+        style={{ marginTop: 16, marginBottom: 32 }}
+      />
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  scroll: { paddingHorizontal: 20, paddingTop: 8 },
   header: { marginBottom: 20 },
   title: { fontSize: 24, fontWeight: "700" },
   headerMeta: {
