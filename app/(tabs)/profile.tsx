@@ -130,7 +130,6 @@ export default function ProfileScreen() {
                       <View style={styles.swipeCircleDefault}>
                         <Star size={16} color="#fff" />
                       </View>
-                      <Text style={styles.swipeActionText}>Default</Text>
                     </Pressable>
                   )}
                   <Pressable
@@ -154,7 +153,6 @@ export default function ProfileScreen() {
                     <View style={styles.swipeCircleDelete}>
                       <Trash2 size={16} color="#fff" />
                     </View>
-                    <Text style={styles.swipeActionText}>Delete</Text>
                   </Pressable>
                 </View>
               );
