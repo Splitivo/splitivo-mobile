@@ -89,7 +89,7 @@ export default function ProfileScreen() {
                   <CreditCard size={20} color="rgba(255,255,255,0.8)" />
                 </View>
                 <Text style={styles.bankNumber}>
-                  •••• •••• •••• {account.accountNumber.slice(-4)}
+                  •••• {account.accountNumber.slice(-4)}
                 </Text>
                 {account.isDefault && (
                   <View

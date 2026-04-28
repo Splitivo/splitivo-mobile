@@ -7,8 +7,10 @@ import {
   Switch,
   Pressable,
   Alert,
+  Platform,
   Text,
 } from "react-native";
+import { isLiquidGlassAvailable } from "expo-glass-effect";
 import Animated, {
   FadeInUp,
   FadeOutUp,
@@ -16,8 +18,10 @@ import Animated, {
 } from "react-native-reanimated";
 import { ChevronUp, ChevronRight, X } from "lucide-react-native";
 import { router } from "expo-router";
-import { useTheme } from "../../../src/core/theme";
+import { useTheme, ThemeMode } from "../../../src/core/theme";
+import { SegmentedControl } from "./SegmentedControl";
 import { useCurrencyStore } from "../../../src/presentation/stores/useCurrencyStore";
+import { useUIStore } from "../../../src/presentation/stores/useUIStore";
 import { BottomSheetScreen } from "./BottomSheetScreen";
 
 /**
@@ -45,9 +49,21 @@ interface DebugText {
   body: string;
 }
 
+const THEME_MODES: ThemeMode[] = ["light", "dark", "system"];
+const THEME_LABELS: Record<ThemeMode, string> = {
+  light: "Light",
+  dark: "Dark",
+  system: "System",
+};
+
 export function DebugBottomSheet() {
   const { colors, mode, setMode } = useTheme();
   const { selectedCurrency, currencies, setCurrency } = useCurrencyStore();
+  const { liquidGlassEnabled, setLiquidGlassEnabled } = useUIStore();
+  const showLiquidGlassToggle =
+    Platform.OS === "ios" &&
+    parseInt(Platform.Version as unknown as string, 10) >= 26 &&
+    isLiquidGlassAvailable();
   const [navigationPath, setNavigationPath] = useState("");
   const [expandedSections, setExpandedSections] = useState<Set<string>>(
     new Set(["Navigation", "Theme", "Stores"]),
@@ -90,13 +106,6 @@ export function DebugBottomSheet() {
       );
     }
   }, [navigationPath]);
-
-  const handleThemeChange = useCallback(
-    (newMode: "light" | "dark" | "system") => {
-      setMode(newMode);
-    },
-    [setMode],
-  );
 
   const debugSections: DebugSection[] = [
     {
@@ -147,92 +156,74 @@ export function DebugBottomSheet() {
       title: "Theme",
       tools: [
         {
-          id: "theme-light",
-          label: "Light Mode",
+          id: "theme-segmented",
+          label: "Theme Mode",
           component: (
-            <Pressable
-              key="theme-light"
-              style={[
-                styles.toolContainer,
-                styles.modeButton,
-                mode === "light" && { backgroundColor: colors.accent.primary },
-              ]}
-              onPress={() => handleThemeChange("light")}
-            >
-              <Text
-                style={[
-                  styles.modeButtonText,
-                  {
-                    color:
-                      mode === "light"
-                        ? colors.text.onAccent
-                        : colors.text.primary,
-                  },
-                ]}
-              >
-                Light
-              </Text>
-            </Pressable>
+            <View key="theme-segmented" style={styles.toolContainer}>
+              <SegmentedControl
+                options={THEME_MODES}
+                labels={THEME_LABELS}
+                selected={mode}
+                onSelect={setMode}
+                style={{ marginBottom: 0 }}
+              />
+            </View>
           ),
         },
-        {
-          id: "theme-dark",
-          label: "Dark Mode",
-          component: (
-            <Pressable
-              key="theme-dark"
-              style={[
-                styles.toolContainer,
-                styles.modeButton,
-                mode === "dark" && { backgroundColor: colors.accent.primary },
-              ]}
-              onPress={() => handleThemeChange("dark")}
-            >
-              <Text
-                style={[
-                  styles.modeButtonText,
-                  {
-                    color:
-                      mode === "dark"
-                        ? colors.text.onAccent
-                        : colors.text.primary,
-                  },
-                ]}
-              >
-                Dark
-              </Text>
-            </Pressable>
-          ),
-        },
-        {
-          id: "theme-system",
-          label: "System Mode",
-          component: (
-            <Pressable
-              key="theme-system"
-              style={[
-                styles.toolContainer,
-                styles.modeButton,
-                mode === "system" && { backgroundColor: colors.accent.primary },
-              ]}
-              onPress={() => handleThemeChange("system")}
-            >
-              <Text
-                style={[
-                  styles.modeButtonText,
-                  {
-                    color:
-                      mode === "system"
-                        ? colors.text.onAccent
-                        : colors.text.primary,
-                  },
-                ]}
-              >
-                System
-              </Text>
-            </Pressable>
-          ),
-        },
+        ...(showLiquidGlassToggle
+          ? [
+              {
+                id: "liquid-glass-toggle",
+                label: "Liquid Glass",
+                component: (
+                  <View
+                    key="liquid-glass-toggle"
+                    style={[
+                      styles.toolContainer,
+                      styles.toggleRow,
+                      {
+                        backgroundColor: colors.bg.glass,
+                        borderColor: colors.border.default,
+                      },
+                    ]}
+                  >
+                    <View style={styles.toggleLeft}>
+                      <Text
+                        style={[
+                          styles.toggleLabel,
+                          { color: colors.text.primary },
+                        ]}
+                      >
+                        Liquid Glass
+                      </Text>
+                      <Text
+                        style={[
+                          styles.toggleSub,
+                          { color: colors.text.tertiary },
+                        ]}
+                      >
+                        Native iOS 26 glass surfaces
+                      </Text>
+                    </View>
+                    <Switch
+                      value={liquidGlassEnabled}
+                      onValueChange={setLiquidGlassEnabled}
+                      trackColor={{
+                        false: colors.border.default,
+                        true: colors.accent.primary,
+                      }}
+                      thumbColor={
+                        liquidGlassEnabled
+                          ? colors.text.onAccent
+                          : colors.text.tertiary
+                      }
+                      ios_backgroundColor={colors.bg.input}
+                    />
+                  </View>
+                ),
+              },
+            ]
+          : []),
       ],
     },
     {
@@ -441,20 +432,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
-  modeButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
+  toggleRow: {
+    flexDirection: "row",
     alignItems: "center",
-    minHeight: 44,
-    justifyContent: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    borderRadius: 12,
     borderWidth: 1,
-    marginHorizontal: 4,
-    flex: 1,
+    marginTop: 0,
   },
-  modeButtonText: {
+  toggleLeft: {
+    flex: 1,
+    marginRight: 12,
+  },
+  toggleLabel: {
     fontSize: 14,
-    fontWeight: "600",
+    fontFamily: "Geist_500Medium",
+    marginBottom: 2,
+  },
+  toggleSub: {
+    fontSize: 12,
+    fontFamily: "Geist_400Regular",
   },
   currencyScroll: {
     marginHorizontal: -4,
