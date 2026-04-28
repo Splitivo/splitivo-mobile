@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -6,6 +6,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
 import { ThemeProvider, useTheme } from "../src/core/theme";
 import { useLiquidGlass } from "../src/hooks/useLiquidGlass";
+import { useUIStore } from "../src/presentation/stores/useUIStore";
 import {
   useFonts,
   Geist_400Regular,
@@ -24,6 +25,11 @@ function RootLayoutInner() {
   const isDark = resolvedMode === "dark";
   const isLiquidGlass = useLiquidGlass();
   const sheetPresentation = isLiquidGlass ? "formSheet" : "modal";
+  const hydrateLiquidGlass = useUIStore((s) => s.hydrateLiquidGlass);
+
+  useEffect(() => {
+    hydrateLiquidGlass();
+  }, []);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

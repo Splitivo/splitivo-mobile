@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Animated,
   LayoutChangeEvent,
+  ViewStyle,
 } from "react-native";
 import { BlurView } from "expo-blur";
 import { GlassView } from "expo-glass-effect";
@@ -19,6 +20,7 @@ interface SegmentedControlProps<T extends string> {
   onSelect: (value: T) => void;
   /** ms to wait before firing onSelect — lets the slide animation finish first */
   delay?: number;
+  style?: ViewStyle;
 }
 
 export function SegmentedControl<T extends string>({
@@ -27,6 +29,7 @@ export function SegmentedControl<T extends string>({
   selected,
   onSelect,
   delay,
+  style,
 }: SegmentedControlProps<T>) {
   const { colors, resolvedMode } = useTheme();
   const isLiquidGlass = useLiquidGlass();
@@ -111,7 +114,7 @@ export function SegmentedControl<T extends string>({
 
   if (isLiquidGlass) {
     return (
-      <View style={styles.shadow}>
+      <View style={[styles.shadow, style]}>
         <GlassView
           glassEffectStyle="regular"
           colorScheme={isDark ? "dark" : "light"}
@@ -124,7 +127,7 @@ export function SegmentedControl<T extends string>({
   }
 
   return (
-    <View style={styles.shadow}>
+    <View style={[styles.shadow, style]}>
       <View style={[styles.wrap, { overflow: "hidden" }]}>
         <BlurView
           intensity={isDark ? 60 : 80}

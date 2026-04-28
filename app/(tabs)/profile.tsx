@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable, Switch, Platform } from "react-native";
 import { Text } from "../../src/presentation/components/Text";
 import { router } from "expo-router";
 import { useTheme, ThemeMode } from "../../src/core/theme";
@@ -10,6 +10,8 @@ import { SegmentedControl } from "../../src/presentation/components/SegmentedCon
 import { Avatar } from "../../src/presentation/components/Avatar";
 import { CardSkeleton } from "../../src/presentation/components/Skeleton";
 import { useCurrencyStore } from "../../src/presentation/stores/useCurrencyStore";
+import { isLiquidGlassAvailable } from "expo-glass-effect";
+import { useUIStore } from "../../src/presentation/stores/useUIStore";
 import { ScreenContainer } from "../../src/presentation/components/ScreenContainer";
 import {
   ChevronRight,
@@ -45,6 +47,13 @@ export default function ProfileScreen() {
   const { colors, mode, setMode } = useTheme();
   const { user, isLoading, fetchUser } = useUserStore();
   const { selectedCurrency, fetchCurrencies } = useCurrencyStore();
+  const { liquidGlassEnabled, setLiquidGlassEnabled } = useUIStore();
+
+  // Only show on iOS 26+ where Liquid Glass is actually available
+  const showLiquidGlassToggle =
+    Platform.OS === "ios" &&
+    parseInt(Platform.Version as unknown as string, 10) >= 26 &&
+    isLiquidGlassAvailable();
 
   useEffect(() => {
     fetchUser();
@@ -141,23 +150,42 @@ export default function ProfileScreen() {
           selected={mode}
           onSelect={setMode}
           delay={250}
+          style={showLiquidGlassToggle ? { marginBottom: 6 } : undefined}
         />
-      </ProfileSection>
-
-      {/* Preferences */}
-      <ProfileSection title="Preferences" colors={colors}>
-        <ProfileRow
-          icon={Bell}
-          label="Notifications"
-          trail="On"
-          colors={colors}
-        />
-        <ProfileRow
-          icon={CreditCard}
-          label="Default Split"
-          trail="Equal"
-          colors={colors}
-        />
+        {showLiquidGlassToggle && (
+          <View
+            style={[
+              styles.toggleRow,
+              {
+                backgroundColor: colors.bg.glass,
+                borderColor: colors.border.default,
+              },
+            ]}
+          >
+            <View style={styles.toggleLeft}>
+              <Text
+                style={[styles.toggleLabel, { color: colors.text.primary }]}
+              >
+                Liquid Glass
+              </Text>
+              <Text style={[styles.toggleSub, { color: colors.text.tertiary }]}>
+                Native iOS 26 glass surfaces
+              </Text>
+            </View>
+            <Switch
+              value={liquidGlassEnabled}
+              onValueChange={setLiquidGlassEnabled}
+              trackColor={{
+                false: colors.border.default,
+                true: colors.accent.primary,
+              }}
+              thumbColor={
+                liquidGlassEnabled ? colors.text.onAccent : colors.text.tertiary
+              }
+              ios_backgroundColor={colors.bg.input}
+            />
+          </View>
+        )}
       </ProfileSection>
 
       {/* App */}
@@ -341,6 +369,24 @@ const styles = StyleSheet.create({
     paddingLeft: 2,
   },
   sectionRows: { gap: 6 },
+
+  // Liquid Glass toggle row
+  toggleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    borderRadius: 12,
+    borderWidth: StyleSheet.hairlineWidth,
+  },
+  toggleLeft: { flex: 1, marginRight: 12 },
+  toggleLabel: {
+    fontSize: 15,
+    fontFamily: "Geist_500Medium",
+    fontWeight: "500",
+  },
+  toggleSub: { fontSize: 12, marginTop: 2 },
 
   // Bank cards
   bankCard: {
