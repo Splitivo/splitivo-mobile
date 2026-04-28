@@ -278,10 +278,10 @@ const styles = StyleSheet.create({
   largeTitle: {
     fontSize: 28,
     fontWeight: "700",
-    fontFamily: "Inter_700Bold",
+    fontFamily: "Geist_700Bold",
     letterSpacing: -0.8,
   },
-  largeSubtitle: { fontSize: 14, marginTop: 4, fontFamily: "Inter_400Regular" },
+  largeSubtitle: { fontSize: 14, marginTop: 4, fontFamily: "Geist_400Regular" },
 
   // Compact nav bar
   navBar: {
