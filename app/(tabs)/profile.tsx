@@ -21,6 +21,7 @@ import { Avatar } from "../../src/presentation/components/Avatar";
 import { CardSkeleton } from "../../src/presentation/components/Skeleton";
 import { useCurrencyStore } from "../../src/presentation/stores/useCurrencyStore";
 import { isLiquidGlassAvailable } from "expo-glass-effect";
+import Constants from "expo-constants";
 import { useUIStore } from "../../src/presentation/stores/useUIStore";
 import { ScreenContainer } from "../../src/presentation/components/ScreenContainer";
 import {
@@ -328,7 +329,7 @@ export default function ProfileScreen() {
       </Pressable>
 
       <Text style={[styles.versionText, { color: colors.text.tertiary }]}>
-        Splitivo v1.0
+        Splitivo v{Constants.expoConfig?.version ?? "0.0.1"}
       </Text>
     </ScreenContainer>
   );
@@ -620,5 +621,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   signOutText: { fontSize: 15, fontWeight: "500" },
-  versionText: { textAlign: "center", fontSize: 10, marginTop: 12 },
+  versionText: { textAlign: "center", fontSize: 13, marginTop: 24 },
 });
