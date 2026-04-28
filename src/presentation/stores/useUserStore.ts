@@ -12,6 +12,7 @@ interface UserState {
   updateUser: (update: Partial<User>) => Promise<void>;
   addBankAccount: (account: Omit<BankAccount, "id">) => Promise<void>;
   removeBankAccount: (accountId: string) => Promise<void>;
+  setDefaultBankAccount: (accountId: string) => Promise<void>;
 }
 
 export const useUserStore = create<UserState>((set, get) => ({
@@ -54,6 +55,17 @@ export const useUserStore = create<UserState>((set, get) => ({
     if (!user) return;
     const updated = await userRepo.updateUser({
       bankAccounts: user.bankAccounts.filter((a) => a.id !== accountId),
+    });
+    set({ user: updated });
+  },
+  setDefaultBankAccount: async (accountId) => {
+    const { user } = get();
+    if (!user) return;
+    const updated = await userRepo.updateUser({
+      bankAccounts: user.bankAccounts.map((a) => ({
+        ...a,
+        isDefault: a.id === accountId,
+      })),
     });
     set({ user: updated });
   },

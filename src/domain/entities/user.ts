@@ -14,6 +14,7 @@ export interface BankAccount {
   bankName: string;
   accountNumber: string;
   isDefault: boolean;
+  color: string;
 }
 
 export interface GuestParticipant {

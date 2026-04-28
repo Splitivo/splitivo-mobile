@@ -11,14 +11,16 @@
       {
         "id": "ba1",
         "bankName": "Chase",
-        "accountNumber": "****1234",
-        "isDefault": true
+        "accountNumber": "1234567890",
+        "isDefault": true,
+        "color": "#3B82F6"
       },
       {
         "id": "ba2",
         "bankName": "Bank of America",
-        "accountNumber": "****5678",
-        "isDefault": false
+        "accountNumber": "9876543210",
+        "isDefault": false,
+        "color": "#8B5CF6"
       }
     ]
   }

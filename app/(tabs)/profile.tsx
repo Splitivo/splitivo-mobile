@@ -1,5 +1,15 @@
-import React, { useEffect } from "react";
-import { View, StyleSheet, Pressable, Switch, Platform } from "react-native";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import {
+  View,
+  StyleSheet,
+  Pressable,
+  Switch,
+  Platform,
+  Alert,
+} from "react-native";
+import ReanimatedSwipeable, {
+  SwipeableMethods,
+} from "react-native-gesture-handler/ReanimatedSwipeable";
 import { Text } from "../../src/presentation/components/Text";
 import { router } from "expo-router";
 import { useTheme, ThemeMode } from "../../src/core/theme";
@@ -22,6 +32,10 @@ import {
   FileText,
   LogOut,
   Camera,
+  Eye,
+  EyeOff,
+  Trash2,
+  Star,
 } from "lucide-react-native";
 
 const THEME_MODES: ThemeMode[] = ["light", "dark", "system"];
@@ -30,11 +44,6 @@ const THEME_LABELS: Record<ThemeMode, string> = {
   dark: "Dark",
   system: "System",
 };
-
-const BANK_GRADIENTS = [
-  { from: "#3B82F6", to: "#4F46E5" }, // blue → indigo
-  { from: "#3F3F46", to: "#18181B" }, // zinc
-];
 
 function hexWithAlpha(hex: string, alpha: number): string {
   const a = Math.round(alpha * 255)
@@ -46,8 +55,41 @@ function hexWithAlpha(hex: string, alpha: number): string {
 export default function ProfileScreen() {
   const { colors, mode, setMode } = useTheme();
   const { user, isLoading, fetchUser } = useUserStore();
+  const { removeBankAccount, setDefaultBankAccount } = useUserStore();
   const { selectedCurrency, fetchCurrencies } = useCurrencyStore();
   const { liquidGlassEnabled, setLiquidGlassEnabled } = useUIStore();
+  const [visibleAccounts, setVisibleAccounts] = useState<Set<string>>(
+    new Set(),
+  );
+  const swipeableRefs = useRef<
+    Record<string, React.RefObject<SwipeableMethods | null>>
+  >({});
+  const openSwipeableId = useRef<string | null>(null);
+
+  const closeOthersAndOpen = (id: string) => {
+    if (openSwipeableId.current && openSwipeableId.current !== id) {
+      swipeableRefs.current[openSwipeableId.current]?.current?.close();
+    }
+    openSwipeableId.current = id;
+  };
+
+  const getSwipeableRef = (
+    id: string,
+  ): React.RefObject<SwipeableMethods | null> => {
+    if (!swipeableRefs.current[id]) {
+      swipeableRefs.current[id] = React.createRef<SwipeableMethods | null>();
+    }
+    return swipeableRefs.current[id];
+  };
+
+  const toggleAccountVisibility = (id: string) => {
+    setVisibleAccounts((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   // Only show on iOS 26+ where Liquid Glass is actually available
   const showLiquidGlassToggle =
@@ -71,43 +113,115 @@ export default function ProfileScreen() {
           <CardSkeleton />
         ) : (
           <>
-            {user?.bankAccounts.map((account, i) => (
-              <View
-                key={account.id}
-                style={[
-                  styles.bankCard,
-                  {
-                    backgroundColor:
-                      BANK_GRADIENTS[i % BANK_GRADIENTS.length].from,
-                  },
-                ]}
-              >
-                {/* Decorative orb */}
-                <View style={styles.bankOrb} />
-                <View style={styles.bankTop}>
-                  <Text style={styles.bankName}>{account.bankName}</Text>
-                  <CreditCard size={20} color="rgba(255,255,255,0.8)" />
-                </View>
-                <Text style={styles.bankNumber}>
-                  •••• {account.accountNumber.slice(-4)}
-                </Text>
-                {account.isDefault && (
-                  <View
-                    style={[
-                      styles.defaultBadge,
-                      {
-                        backgroundColor: hexWithAlpha(
-                          colors.text.onAccent,
-                          0.2,
-                        ),
-                      },
-                    ]}
+            {user?.bankAccounts.map((account, i) => {
+              const isVisible = visibleAccounts.has(account.id);
+
+              const renderRightActions = () => (
+                <View style={styles.swipeActionsRow}>
+                  {!account.isDefault && (
+                    <Pressable
+                      style={styles.swipeActionWrap}
+                      onPress={() => {
+                        swipeableRefs.current[account.id]?.current?.close();
+                        setDefaultBankAccount(account.id);
+                      }}
+                    >
+                      <View style={styles.swipeCircleDefault}>
+                        <Star size={16} color="#fff" />
+                      </View>
+                      <Text style={styles.swipeActionText}>Default</Text>
+                    </Pressable>
+                  )}
+                  <Pressable
+                    style={styles.swipeActionWrap}
+                    onPress={() => {
+                      swipeableRefs.current[account.id]?.current?.close();
+                      Alert.alert(
+                        "Remove Account",
+                        `Remove ${account.bankName} account?`,
+                        [
+                          { text: "Cancel", style: "cancel" },
+                          {
+                            text: "Remove",
+                            style: "destructive",
+                            onPress: () => removeBankAccount(account.id),
+                          },
+                        ],
+                      );
+                    }}
                   >
-                    <Text style={styles.defaultBadgeText}>Default</Text>
+                    <View style={styles.swipeCircleDelete}>
+                      <Trash2 size={16} color="#fff" />
+                    </View>
+                    <Text style={styles.swipeActionText}>Delete</Text>
+                  </Pressable>
+                </View>
+              );
+
+              return (
+                <ReanimatedSwipeable
+                  key={account.id}
+                  ref={getSwipeableRef(account.id)}
+                  friction={2}
+                  rightThreshold={60}
+                  renderRightActions={renderRightActions}
+                  onSwipeableWillOpen={() => closeOthersAndOpen(account.id)}
+                  onSwipeableClose={() => {
+                    if (openSwipeableId.current === account.id) {
+                      openSwipeableId.current = null;
+                    }
+                  }}
+                  containerStyle={styles.swipeContainer}
+                  childrenContainerStyle={[
+                    styles.bankCard,
+                    { backgroundColor: account.color },
+                  ]}
+                >
+                  <Pressable
+                    style={StyleSheet.absoluteFill}
+                    onPress={() =>
+                      router.push(`/edit-bank-account-sheet?id=${account.id}`)
+                    }
+                  />
+                  {/* Decorative orb */}
+                  <View style={styles.bankOrb} />
+                  <View style={styles.bankTop}>
+                    <Text style={styles.bankName}>{account.bankName}</Text>
+                    <CreditCard size={20} color="rgba(255,255,255,0.8)" />
                   </View>
-                )}
-              </View>
-            ))}
+                  <View style={styles.bankNumberRow}>
+                    <Text style={styles.bankNumber}>
+                      {isVisible ? account.accountNumber : `•••• ••••`}
+                    </Text>
+                    <Pressable
+                      onPress={() => toggleAccountVisibility(account.id)}
+                      hitSlop={8}
+                    >
+                      {isVisible ? (
+                        <EyeOff size={16} color="rgba(255,255,255,0.7)" />
+                      ) : (
+                        <Eye size={16} color="rgba(255,255,255,0.7)" />
+                      )}
+                    </Pressable>
+                  </View>
+                  {account.isDefault && (
+                    <View
+                      style={[
+                        styles.defaultBadge,
+                        {
+                          backgroundColor: hexWithAlpha(
+                            colors.text.onAccent,
+                            0.2,
+                          ),
+                        },
+                      ]}
+                    >
+                      <Text style={styles.defaultBadgeText}>Default</Text>
+                    </View>
+                  )}
+                </ReanimatedSwipeable>
+              );
+            })}
             <Pressable
               style={[
                 styles.addBankBtn,
@@ -389,6 +503,43 @@ const styles = StyleSheet.create({
   toggleSub: { fontSize: 12, marginTop: 2 },
 
   // Bank cards
+  swipeContainer: {
+    borderRadius: 16,
+    marginBottom: 0,
+  },
+  swipeActionsRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "stretch",
+    paddingLeft: 8,
+  },
+  swipeActionWrap: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: 64,
+    gap: 5,
+  },
+  swipeCircleDelete: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "#EF4444",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  swipeCircleDefault: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "#22C55E",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  swipeActionText: {
+    color: "#fff",
+    fontSize: 11,
+    fontFamily: "Geist_600SemiBold",
+  },
   bankCard: {
     borderRadius: 16,
     padding: 16,
@@ -416,6 +567,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     letterSpacing: -0.2,
+  },
+  bankNumberRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
   },
   bankNumber: {
     color: "rgba(255,255,255,0.9)",

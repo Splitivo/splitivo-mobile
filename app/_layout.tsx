@@ -82,6 +82,20 @@ function RootLayoutInner() {
           }}
         />
         <Stack.Screen
+          name="edit-bank-account-sheet"
+          options={{
+            headerShown: false,
+            presentation: "formSheet",
+            sheetAllowedDetents: "fitToContents",
+            sheetExpandsWhenScrolledToEdge: false,
+            contentStyle: {
+              backgroundColor: isLiquidGlass
+                ? colors.bg.sheetGlass
+                : colors.bg.sheet,
+            },
+          }}
+        />
+        <Stack.Screen
           name="debug-sheet"
           options={{
             headerShown: false,
