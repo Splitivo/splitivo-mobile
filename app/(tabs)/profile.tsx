@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable } from "react-native";
+import { Text } from "../../src/presentation/components/Text";
 import { router } from "expo-router";
 import { useTheme, ThemeMode } from "../../src/core/theme";
 import { useUserStore } from "../../src/presentation/stores/useUserStore";

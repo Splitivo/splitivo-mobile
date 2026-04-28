@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, TextInput, StyleSheet } from "react-native";
+import { Text } from "../../src/presentation/components/Text";
 import { ScreenContainer } from "../../src/presentation/components/ScreenContainer";
 import { router } from "expo-router";
 import { useTheme } from "../../src/core/theme";

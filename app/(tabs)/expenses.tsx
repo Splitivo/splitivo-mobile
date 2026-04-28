@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { View, Text, ScrollView, StyleSheet, Pressable } from "react-native";
+import { View, ScrollView, StyleSheet, Pressable } from "react-native";
+import { Text } from "../../src/presentation/components/Text";
 import { useTheme, CATEGORY_META } from "../../src/core/theme";
 import { useExpenseStore } from "../../src/presentation/stores/useExpenseStore";
 import { GlassCard } from "../../src/presentation/components/GlassCard";

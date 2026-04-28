@@ -6,10 +6,18 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
 import { ThemeProvider, useTheme } from "../src/core/theme";
 import { useLiquidGlass } from "../src/hooks/useLiquidGlass";
+import {
+  useFonts,
+  Geist_400Regular,
+  Geist_500Medium,
+  Geist_600SemiBold,
+  Geist_700Bold,
+  Geist_800ExtraBold,
+} from "@expo-google-fonts/geist";
 import "../global.css";
 
-const DARK_GRADIENT = ["#2D1B5E", "#1A1721", "#0F0D16"] as const;
-const LIGHT_GRADIENT = ["#DDD6FE", "#F5F3FF", "#FAFAFA"] as const;
+const DARK_GRADIENT = ["#141414", "#0A0A0A", "#000000"] as const;
+const LIGHT_GRADIENT = ["#FFFFFF", "#F5F5F5", "#EBEBEB"] as const;
 
 function RootLayoutInner() {
   const { resolvedMode, colors } = useTheme();
@@ -88,6 +96,16 @@ function RootLayoutInner() {
 }
 
 export default function RootLayout() {
+  const [fontsLoaded] = useFonts({
+    Geist_400Regular,
+    Geist_500Medium,
+    Geist_600SemiBold,
+    Geist_700Bold,
+    Geist_800ExtraBold,
+  });
+
+  if (!fontsLoaded) return null;
+
   return (
     <ThemeProvider>
       <RootLayoutInner />

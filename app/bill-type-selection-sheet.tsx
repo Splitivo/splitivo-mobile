@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
+import { Text } from "../src/presentation/components/Text";
 import { router } from "expo-router";
 import { useTheme } from "../src/core/theme";
 import { GlassCard } from "../src/presentation/components/GlassCard";

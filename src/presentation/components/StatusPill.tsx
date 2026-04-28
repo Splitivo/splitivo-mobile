@@ -57,7 +57,9 @@ const styles = StyleSheet.create({
     marginRight: 2,
   },
   text: {
-    fontSize: 12,
+    fontSize: 11,
+    fontFamily: "Geist_600SemiBold",
     fontWeight: "600",
+    letterSpacing: 0.2,
   },
 });

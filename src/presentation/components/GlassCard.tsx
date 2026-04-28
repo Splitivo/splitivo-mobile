@@ -69,14 +69,17 @@ export function GlassCard({
     return (
       <Pressable
         onPress={onPress}
-        style={[{ borderRadius: radius, overflow: "hidden" }]}
+        style={[styles.shadow, { borderRadius: radius }]}
       >
         {({ pressed }) => (
           <View
-            style={{
-              opacity: pressed ? 0.85 : 1,
-              transform: [{ scale: pressed ? 0.98 : 1 }],
-            }}
+            style={[
+              { borderRadius: radius, overflow: "hidden" },
+              {
+                opacity: pressed ? 0.85 : 1,
+                transform: [{ scale: pressed ? 0.98 : 1 }],
+              },
+            ]}
           >
             {content}
           </View>
@@ -86,8 +89,10 @@ export function GlassCard({
   }
 
   return (
-    <View style={[{ borderRadius: radius, overflow: "hidden" }]}>
-      {content}
+    <View style={[styles.shadow, { borderRadius: radius }]}>
+      <View style={{ borderRadius: radius, overflow: "hidden" }}>
+        {content}
+      </View>
     </View>
   );
 }
@@ -95,5 +100,12 @@ export function GlassCard({
 const styles = StyleSheet.create({
   inner: {
     padding: 16,
+  },
+  shadow: {
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
   },
 });

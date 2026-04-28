@@ -111,30 +111,43 @@ export function SegmentedControl<T extends string>({
 
   if (isLiquidGlass) {
     return (
-      <GlassView
-        glassEffectStyle="regular"
-        colorScheme={isDark ? "dark" : "light"}
-        style={styles.wrap}
-      >
-        {inner}
-      </GlassView>
+      <View style={styles.shadow}>
+        <GlassView
+          glassEffectStyle="regular"
+          colorScheme={isDark ? "dark" : "light"}
+          style={styles.wrap}
+        >
+          {inner}
+        </GlassView>
+      </View>
     );
   }
 
   return (
-    <View style={[styles.wrap, { overflow: "hidden" }]}>
-      <BlurView
-        intensity={isDark ? 60 : 80}
-        tint={isDark ? "dark" : "light"}
-        style={StyleSheet.absoluteFill}
-      />
-      {inner}
+    <View style={styles.shadow}>
+      <View style={[styles.wrap, { overflow: "hidden" }]}>
+        <BlurView
+          intensity={isDark ? 60 : 80}
+          tint={isDark ? "dark" : "light"}
+          style={StyleSheet.absoluteFill}
+        />
+        {inner}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  wrap: { borderRadius: 16, marginBottom: 20, overflow: "hidden" },
+  shadow: {
+    borderRadius: 16,
+    marginBottom: 20,
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  wrap: { borderRadius: 16, overflow: "hidden" },
   row: { flexDirection: "row", padding: 6 },
   pill: {
     position: "absolute",
@@ -149,5 +162,10 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: "center",
   },
-  label: { fontSize: 13, fontWeight: "600" },
+  label: {
+    fontSize: 13,
+    fontFamily: "Geist_600SemiBold",
+    fontWeight: "600",
+    letterSpacing: -0.1,
+  },
 });

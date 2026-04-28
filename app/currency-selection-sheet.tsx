@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  Keyboard,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Keyboard, Pressable, StyleSheet, TextInput, View } from "react-native";
+import { Text } from "../src/presentation/components/Text";
 import { FlashList } from "@shopify/flash-list";
 import { router } from "expo-router";
 import { Check, Search, X } from "lucide-react-native";

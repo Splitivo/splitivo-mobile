@@ -88,7 +88,7 @@ function CustomTabBar({ state, navigation }: BottomTabBarProps) {
             styles.fab,
             {
               backgroundColor: colors.accent.primary,
-              shadowColor: colors.accent.primary,
+              shadowColor: "#000000",
             },
           ]}
         >

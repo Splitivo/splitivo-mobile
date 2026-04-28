@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { View, Text, ScrollView, StyleSheet, Pressable } from "react-native";
+import { View, ScrollView, StyleSheet, Pressable } from "react-native";
+import { Text } from "../../src/presentation/components/Text";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { useTheme, CATEGORY_META } from "../../src/core/theme";
@@ -347,7 +348,7 @@ function ActiveTripsSection({
       horizontal
       showsHorizontalScrollIndicator={false}
       style={styles.tripScroll}
-      contentContainerStyle={{ paddingHorizontal: 20 }}
+      contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 8 }}
       snapToInterval={232}
       snapToAlignment="start"
       decelerationRate="fast"
@@ -637,7 +638,7 @@ const styles = StyleSheet.create({
   seeAllText: { fontSize: 12 },
 
   // Trips
-  tripScroll: { marginBottom: 28, marginHorizontal: -20 },
+  tripScroll: { marginBottom: 20, marginHorizontal: -20, marginVertical: -8 },
   tripCard: { marginRight: 12 },
   tripCardInner: { width: 220, padding: 0 },
   tripCardTop: {

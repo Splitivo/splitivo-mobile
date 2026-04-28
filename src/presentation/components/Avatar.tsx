@@ -17,14 +17,14 @@ function getInitials(name: string): string {
     .slice(0, 2);
 }
 
-// Deterministic gradient start colors — matching pocket-companion gradient presets
+// Distinct accent colors — visible on both black and white backgrounds
 const AVATAR_COLORS = [
-  "#8B5CF6", // violet
-  "#38BDF8", // sky → indigo
-  "#34D399", // emerald → teal
-  "#FBBF24", // amber → orange
-  "#FB7185", // rose → pink
-  "#22D3EE", // cyan → blue
+  "#F59E0B", // amber
+  "#3B82F6", // blue
+  "#22C55E", // green
+  "#EC4899", // pink
+  "#8B5CF6", // purple
+  "#06B6D4", // cyan
 ] as const;
 
 function getAvatarColor(name: string): string {
@@ -59,6 +59,7 @@ export function Avatar({ name, imageUrl, size = 40 }: AvatarProps) {
           {
             fontSize: size * 0.38,
             color: "#FFFFFF",
+            fontFamily: "Geist_600SemiBold",
           },
         ]}
       >

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, StyleSheet, Pressable } from "react-native";
+import { View, ScrollView, StyleSheet, Pressable } from "react-native";
+import { Text } from "../../src/presentation/components/Text";
 import { router } from "expo-router";
 import { useTheme, CATEGORY_META } from "../../src/core/theme";
 import { useBillStore } from "../../src/presentation/stores/useBillStore";

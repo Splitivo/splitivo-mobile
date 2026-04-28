@@ -20,8 +20,8 @@ export type NavBarItem =
   | { type: "backButton" }
   | { type: "custom"; icon: React.ReactNode; onPress: () => void };
 
-const DARK_GRADIENT = ["#2D1B5E", "#1A1721", "#0F0D16"] as const;
-const LIGHT_GRADIENT = ["#DDD6FE", "#F5F3FF", "#FAFAFA"] as const;
+const DARK_GRADIENT = ["#141414", "#0A0A0A", "#000000"] as const;
+const LIGHT_GRADIENT = ["#FFFFFF", "#F5F5F5", "#EBEBEB"] as const;
 
 const COLLAPSE_START = 40;
 const COLLAPSE_END = 88;
@@ -275,8 +275,13 @@ const styles = StyleSheet.create({
 
   // Large title (scrolls with content)
   largeHeader: { marginBottom: 20 },
-  largeTitle: { fontSize: 26, fontWeight: "700", letterSpacing: -0.5 },
-  largeSubtitle: { fontSize: 13, marginTop: 2 },
+  largeTitle: {
+    fontSize: 28,
+    fontWeight: "700",
+    fontFamily: "Inter_700Bold",
+    letterSpacing: -0.8,
+  },
+  largeSubtitle: { fontSize: 14, marginTop: 4, fontFamily: "Inter_400Regular" },
 
   // Compact nav bar
   navBar: {
@@ -302,9 +307,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 60,
   },
   navBarTitle: {
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: "600",
-    letterSpacing: -0.3,
+    fontFamily: "Geist_600SemiBold",
+    letterSpacing: -0.2,
     textAlign: "center",
   },
   navBarTitleContainer: {

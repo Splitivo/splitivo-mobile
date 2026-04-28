@@ -40,7 +40,7 @@ export function Button({
 
   const bgColor = {
     primary: colors.accent.primary,
-    secondary: colors.bg.container,
+    secondary: "transparent",
     destructive: colors.status.error,
     ghost: "transparent",
   }[variant];
@@ -52,8 +52,15 @@ export function Button({
     ghost: colors.accent.primary,
   }[variant];
 
-  const heights = { sm: 36, md: 44, lg: 52 };
-  const fontSizes = { sm: 14, md: 16, lg: 18 };
+  const borderColor = {
+    primary: "transparent",
+    secondary: colors.border.default,
+    destructive: "transparent",
+    ghost: "transparent",
+  }[variant];
+
+  const heights = { sm: 36, md: 46, lg: 54 };
+  const fontSizes = { sm: 13, md: 15, lg: 17 };
 
   return (
     <Pressable
@@ -64,7 +71,10 @@ export function Button({
         {
           backgroundColor: pressed ? colors.accent.pressed : bgColor,
           height: heights[size],
-          opacity: disabled ? 0.5 : 1,
+          opacity: disabled ? 0.4 : 1,
+          borderColor,
+          borderWidth:
+            variant === "secondary" ? StyleSheet.hairlineWidth * 2 : 0,
         },
         fullWidth && styles.fullWidth,
         style,
@@ -85,15 +95,17 @@ export function Button({
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 12,
-    paddingHorizontal: 20,
+    borderRadius: 14,
+    paddingHorizontal: 22,
     alignItems: "center",
     justifyContent: "center",
     minWidth: 44,
     minHeight: 44,
   },
   text: {
+    fontFamily: "Geist_600SemiBold",
     fontWeight: "600",
+    letterSpacing: -0.1,
   },
   fullWidth: {
     width: "100%",
