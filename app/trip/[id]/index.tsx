@@ -88,6 +88,11 @@ export default function TripDetailScreen() {
       title={trip.name}
       navBarTitle="Trip Detail"
       navBarLeading={{ type: "backButton" }}
+      refreshable
+      onRefresh={async () => {
+        await fetchTrips();
+        if (id) await fetchOptimizedTransfers(id);
+      }}
     >
       {/* Trip meta */}
       <View style={styles.headerMeta}>

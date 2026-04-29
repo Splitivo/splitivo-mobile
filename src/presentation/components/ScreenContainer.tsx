@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   Text,
@@ -7,10 +7,12 @@ import {
   ViewStyle,
   Pressable,
 } from "react-native";
+import Svg, { Circle } from "react-native-svg";
+
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
-import { GlassView } from "expo-glass-effect";
 import { router } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
 import { useTheme } from "../../core/theme";
@@ -48,6 +50,10 @@ interface ScreenContainerProps {
    * crossfading into `title` as the large title scrolls away.
    */
   navBarTitle?: string;
+  /** When true, enables pull-to-refresh on the scroll view. */
+  refreshable?: boolean;
+  /** Called when the user pulls to refresh. Must resolve/complete to hide the indicator. */
+  onRefresh?: () => Promise<void>;
 }
 
 /**
@@ -67,6 +73,8 @@ export function ScreenContainer({
   isLargeTitle = true,
   contentContainerStyle,
   navBarTitle,
+  refreshable = false,
+  onRefresh,
 }: ScreenContainerProps) {
   const insets = useSafeAreaInsets();
   const { resolvedMode, colors } = useTheme();
@@ -74,23 +82,52 @@ export function ScreenContainer({
   const isDark = resolvedMode === "dark";
   const gradientColors = isDark ? DARK_GRADIENT : LIGHT_GRADIENT;
 
-  const scrollY = useRef(new Animated.Value(0)).current;
+  // Single Animated.Value tracking raw contentOffset.y — driven natively on UI thread
+  const scrollOffset = useRef(new Animated.Value(0)).current;
+  const maxPullRef = useRef(0);
   const NAV_BAR_TOTAL = insets.top + 52;
+  const PULL_THRESHOLD = 60;
 
-  const navBarOpacity = scrollY.interpolate({
+  // Pull circle opacity: visible while pulling, invisible at rest
+  const pullCircleOpacity = scrollOffset.interpolate({
+    inputRange: [-PULL_THRESHOLD, -4, 0],
+    outputRange: [1, 0.1, 0],
+    extrapolate: "clamp",
+  });
+
+  // Arc: strokeDashoffset = CIRCUMFERENCE at 0 pull, 0 at full pull
+  const pullStrokeDashoffset = scrollOffset.interpolate({
+    inputRange: [-PULL_THRESHOLD, 0],
+    outputRange: [0, CIRCUMFERENCE],
+    extrapolate: "clamp",
+  });
+
+  // JS-side listener only for tracking max pull — fires rarely, not on every frame
+  const handleScroll = (e: any) => {
+    const y = e.nativeEvent.contentOffset.y;
+    if (y < 0 && -y > maxPullRef.current) maxPullRef.current = -y;
+  };
+
+  const handleScrollEndDrag = () => {
+    const reached = maxPullRef.current >= PULL_THRESHOLD;
+    maxPullRef.current = 0;
+    if (reached && onRefresh) {
+      onRefresh();
+    }
+  };
+
+  const navBarOpacity = scrollOffset.interpolate({
     inputRange: [COLLAPSE_START, COLLAPSE_END],
     outputRange: [0, 1],
     extrapolate: "clamp",
   });
 
-  // Inverse opacity: fades out as user scrolls (used for navBarTitle crossfade)
-  const pageNavBarOpacity = scrollY.interpolate({
+  const pageNavBarOpacity = scrollOffset.interpolate({
     inputRange: [COLLAPSE_START, COLLAPSE_END],
     outputRange: [1, 0],
     extrapolate: "clamp",
   });
 
-  // When not large title, or navBarTitle is provided, nav bar is always fully visible
   const resolvedNavBarOpacity =
     isLargeTitle && !navBarTitle ? navBarOpacity : 1;
 
@@ -180,18 +217,38 @@ export function ScreenContainer({
                 paddingTop:
                   isLargeTitle && !navBarTitle
                     ? insets.top + 16
-                    : NAV_BAR_TOTAL + 8,
+                    : NAV_BAR_TOTAL + 16,
                 paddingHorizontal: 20,
+                marginTop: refreshable ? -24 : 0,
               },
               contentContainerStyle,
             ]}
             showsVerticalScrollIndicator={false}
+            bounces
+            alwaysBounceVertical
             onScroll={Animated.event(
-              [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-              { useNativeDriver: true },
+              [{ nativeEvent: { contentOffset: { y: scrollOffset } } }],
+              { useNativeDriver: true, listener: handleScroll },
             )}
-            scrollEventThrottle={16}
+            onScrollEndDrag={handleScrollEndDrag}
+            scrollEventThrottle={1}
           >
+            {/* Pull circle — arc grows as user pulls, driven entirely by Animated values */}
+            {refreshable && (
+              <Animated.View
+                style={[
+                  styles.refreshSpinnerWrap,
+                  { opacity: pullCircleOpacity },
+                ]}
+                pointerEvents="none"
+              >
+                <PullCircle
+                  strokeDashoffset={pullStrokeDashoffset}
+                  color={colors.text.primary}
+                />
+              </Animated.View>
+            )}
+
             {isLargeTitle ? (
               <View style={styles.largeHeader}>
                 <Text
@@ -247,6 +304,35 @@ export function ScreenContainer({
 }
 
 type Colors = ReturnType<typeof useTheme>["colors"];
+
+const CIRCLE_SIZE = 24;
+const RADIUS = 10;
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+
+function PullCircle({
+  strokeDashoffset,
+  color,
+}: {
+  strokeDashoffset: Animated.AnimatedInterpolation<number>;
+  color: string;
+}) {
+  return (
+    <Svg width={CIRCLE_SIZE} height={CIRCLE_SIZE}>
+      <AnimatedCircle
+        cx={CIRCLE_SIZE / 2}
+        cy={CIRCLE_SIZE / 2}
+        r={RADIUS}
+        stroke={color}
+        strokeWidth={2}
+        fill="none"
+        strokeDasharray={CIRCUMFERENCE}
+        strokeDashoffset={strokeDashoffset}
+        strokeLinecap="round"
+        transform={`rotate(-90 ${CIRCLE_SIZE / 2} ${CIRCLE_SIZE / 2})`}
+      />
+    </Svg>
+  );
+}
 
 function NavBarItemView({
   item,
@@ -323,4 +409,9 @@ const styles = StyleSheet.create({
   },
   navBarLeading: { position: "absolute", left: 16 },
   navBarTrailing: { position: "absolute", right: 16 },
+  refreshSpinnerWrap: {
+    alignItems: "center",
+    paddingVertical: 10,
+    marginBottom: 4,
+  },
 });
