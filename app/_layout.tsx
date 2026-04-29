@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
-import { Stack } from "expo-router";
+import { Stack, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
 import { ThemeProvider, useTheme } from "../src/core/theme";
 import { useLiquidGlass } from "../src/hooks/useLiquidGlass";
 import { useUIStore } from "../src/presentation/stores/useUIStore";
+import { useAuthStore } from "../src/presentation/stores/useAuthStore";
 import {
   useFonts,
   Geist_400Regular,
@@ -26,10 +27,19 @@ function RootLayoutInner() {
   const isLiquidGlass = useLiquidGlass();
   const sheetPresentation = isLiquidGlass ? "formSheet" : "modal";
   const hydrateLiquidGlass = useUIStore((s) => s.hydrateLiquidGlass);
+  const session = useAuthStore((s) => s.session);
 
   useEffect(() => {
     hydrateLiquidGlass();
   }, []);
+
+  useEffect(() => {
+    if (session) {
+      router.replace("/(tabs)");
+    } else {
+      router.replace("/(auth)/welcome");
+    }
+  }, [session]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

@@ -1,14 +1,20 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Platform, ActivityIndicator } from "react-native";
 import { Text } from "../../src/presentation/components/Text";
 import { ScreenContainer } from "../../src/presentation/components/ScreenContainer";
 import { router } from "expo-router";
 import { useTheme } from "../../src/core/theme";
-import { GlassCard } from "../../src/presentation/components/GlassCard";
 import { Button } from "../../src/presentation/components/Button";
+import { useAuthStore } from "../../src/presentation/stores/useAuthStore";
 
 export default function WelcomeScreen() {
   const { colors } = useTheme();
+  const { signIn, isLoading, error } = useAuthStore();
+
+  const handleSignIn = async (provider: "apple" | "google") => {
+    await signIn(provider);
+    router.replace("/(tabs)");
+  };
 
   return (
     <ScreenContainer>
@@ -22,29 +28,36 @@ export default function WelcomeScreen() {
           </Text>
         </View>
 
-        <GlassCard style={styles.authCard}>
+        <View style={styles.authButtons}>
+          {Platform.OS === "ios" && (
+            <Button
+              title="Sign in with Apple"
+              onPress={() => handleSignIn("apple")}
+              variant="secondary"
+              fullWidth
+              disabled={isLoading}
+            />
+          )}
           <Button
-            title="Continue with Google"
-            onPress={() => router.push("/(tabs)")}
+            title="Sign in with Google"
+            onPress={() => handleSignIn("google")}
             variant="secondary"
             fullWidth
-            style={styles.authButton}
+            disabled={isLoading}
           />
-          <Button
-            title="Continue with Apple"
-            onPress={() => router.push("/(tabs)")}
-            variant="secondary"
-            fullWidth
-            style={styles.authButton}
-          />
-          <Button
-            title="Continue with Email or Phone"
-            onPress={() => router.push("/(auth)/sign-in")}
-            variant="primary"
-            fullWidth
-            style={styles.authButton}
-          />
-        </GlassCard>
+          {isLoading && (
+            <ActivityIndicator
+              size="small"
+              color={colors.accent.primary}
+              style={styles.spinner}
+            />
+          )}
+          {error && (
+            <Text style={[styles.error, { color: colors.status.error }]}>
+              {error}
+            </Text>
+          )}
+        </View>
       </View>
     </ScreenContainer>
   );
@@ -69,10 +82,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 8,
   },
-  authCard: {
+  authButtons: {
     gap: 12,
   },
-  authButton: {
-    marginBottom: 0,
+  spinner: {
+    marginTop: 8,
+  },
+  error: {
+    fontSize: 13,
+    textAlign: "center",
+    marginTop: 4,
   },
 });

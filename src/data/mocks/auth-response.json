@@ -1,0 +1,32 @@
+{
+  "apple": {
+    "accessToken": "mock-apple-access-token-abc123",
+    "refreshToken": "mock-apple-refresh-token-xyz789",
+    "expiresAt": 9999999999000,
+    "provider": "apple",
+    "user": {
+      "id": "apple-user-001",
+      "username": "haikal",
+      "displayName": "Haikal Fadil",
+      "email": "haikal@example.com",
+      "avatarUrl": null,
+      "baseCurrency": "IDR",
+      "bankAccounts": []
+    }
+  },
+  "google": {
+    "accessToken": "mock-google-access-token-def456",
+    "refreshToken": "mock-google-refresh-token-uvw321",
+    "expiresAt": 9999999999000,
+    "provider": "google",
+    "user": {
+      "id": "google-user-001",
+      "username": "haikal",
+      "displayName": "Haikal Fadil",
+      "email": "haikal@example.com",
+      "avatarUrl": null,
+      "baseCurrency": "IDR",
+      "bankAccounts": []
+    }
+  }
+}
