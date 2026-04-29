@@ -49,17 +49,31 @@ function CustomTabBar({ state, navigation }: BottomTabBarProps) {
     >
       <View style={styles.row} pointerEvents="box-none">
         {/* Floating glass pill */}
-        <View style={styles.pill} pointerEvents="box-none">
+        <View
+          style={[
+            styles.pill,
+            !isLiquidGlassEnabled &&
+              resolvedMode === "light" && {
+                backgroundColor: "rgba(255,255,255,0.85)",
+              },
+          ]}
+          pointerEvents="box-none"
+        >
           {isLiquidGlassEnabled ? (
             <GlassView
               glassEffectStyle="clear"
-              style={{
-                position: "absolute",
-                top: -3,
-                left: -4,
-                right: -4,
-                bottom: -3,
-              }}
+              style={[
+                {
+                  position: "absolute",
+                  top: -3,
+                  left: -4,
+                  right: -4,
+                  bottom: -3,
+                },
+                resolvedMode === "light" && {
+                  backgroundColor: "rgba(200,200,200,0.45)",
+                },
+              ]}
             />
           ) : (
             <BlurView

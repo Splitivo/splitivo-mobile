@@ -51,7 +51,13 @@ export function GlassCard({
     <GlassView
       glassEffectStyle={strong ? "regular" : "clear"}
       colorScheme={resolvedMode === "dark" ? "dark" : "light"}
-      style={[{ borderRadius: radius, overflow: "hidden" }, style]}
+      style={[
+        { borderRadius: radius, overflow: "hidden" },
+        resolvedMode === "light" && {
+          backgroundColor: "rgba(255,255,255,0.55)",
+        },
+        style,
+      ]}
     >
       {innerContent}
     </GlassView>

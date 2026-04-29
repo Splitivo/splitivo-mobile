@@ -56,7 +56,7 @@ function RootLayoutInner() {
           options={{
             headerShown: false,
             presentation: sheetPresentation,
-            sheetAllowedDetents: [0.6],
+            sheetAllowedDetents: "fitToContents",
             sheetInitialDetentIndex: 0,
             sheetExpandsWhenScrolledToEdge: false,
             contentStyle: {

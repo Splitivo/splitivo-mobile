@@ -104,7 +104,7 @@ const lightColors: ThemeColors = {
     card: "rgba(255, 255, 255, 0.82)",
     cardPressed: "rgba(0, 0, 0, 0.04)",
     sheet: "rgba(250, 250, 250, 0.96)",
-    sheetGlass: "rgba(255, 255, 255, 0.0)",
+    sheetGlass: "rgba(255, 255, 255, 8)",
     tabBar: "rgba(255, 255, 255, 0.88)",
     input: "rgba(0, 0, 0, 0.04)",
     glass: "rgba(255, 255, 255, 0.60)",

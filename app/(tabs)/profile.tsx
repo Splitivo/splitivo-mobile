@@ -263,6 +263,7 @@ export default function ProfileScreen() {
           selected={mode}
           onSelect={setMode}
           delay={250}
+          liquidGlass="disabled"
           style={showLiquidGlassToggle ? { marginBottom: 6 } : undefined}
         />
         {showLiquidGlassToggle && (
@@ -488,10 +489,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    borderRadius: 12,
-    borderWidth: StyleSheet.hairlineWidth,
+    paddingHorizontal: 16,
+    paddingVertical: 13,
+    borderRadius: 16,
+    borderWidth: 1,
   },
   toggleLeft: { flex: 1, marginRight: 12 },
   toggleLabel: {

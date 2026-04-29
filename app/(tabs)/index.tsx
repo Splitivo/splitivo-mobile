@@ -112,6 +112,8 @@ export default function HomeScreen() {
             accentColor={colors.accent.primary}
             textPrimary={colors.text.primary}
             textTertiary={colors.text.tertiary}
+            cardBg={colors.bg.glass}
+            cardBorder={colors.border.default}
           />
           <QuickActionCard
             icon={PenLine}
@@ -121,6 +123,8 @@ export default function HomeScreen() {
             accentColor={colors.accent.primary}
             textPrimary={colors.text.primary}
             textTertiary={colors.text.tertiary}
+            cardBg={colors.bg.glass}
+            cardBorder={colors.border.default}
           />
         </View>
 
@@ -183,7 +187,15 @@ function CurrencyButton({
   const isLiquidGlass = useLiquidGlass();
 
   return isLiquidGlass ? (
-    <GlassView glassEffectStyle="clear" style={styles.currencyBtn}>
+    <GlassView
+      glassEffectStyle="clear"
+      style={[
+        styles.currencyBtn,
+        resolvedMode === "light" && {
+          backgroundColor: "rgba(200,200,200,0.45)",
+        },
+      ]}
+    >
       <Pressable
         onPress={() => router.push("/currency-selection-sheet")}
         style={styles.currencyBtnInner}
@@ -207,7 +219,12 @@ function CurrencyButton({
   ) : (
     <Pressable
       onPress={() => router.push("/currency-selection-sheet")}
-      style={styles.currencyBtn}
+      style={[
+        styles.currencyBtn,
+        resolvedMode === "light"
+          ? { backgroundColor: "rgba(255,255,255,0.85)" }
+          : { backgroundColor: "rgba(255,255,255,0.12)" },
+      ]}
     >
       <Text style={[styles.currencySymbol, { color: colors.accent.primary }]}>
         {selectedCurrency?.symbol ?? "$"}
@@ -238,7 +255,18 @@ function BalanceCard({
   currency: string;
 }) {
   return (
-    <GlassCard strong style={styles.balanceCard}>
+    <View
+      style={[
+        styles.balanceCard,
+        {
+          backgroundColor: colors.bg.glass,
+          borderRadius: 24,
+          borderWidth: 1,
+          borderColor: colors.border.default,
+          padding: 16,
+        },
+      ]}
+    >
       <View
         style={[styles.glowOrb, { backgroundColor: colors.accent.primary }]}
       />
@@ -280,13 +308,24 @@ function BalanceCard({
           </Text>
         </View>
       </View>
-    </GlassCard>
+    </View>
   );
 }
 
 function TripCard({ trip, colors }: { trip: Trip; colors: Colors }) {
   return (
-    <GlassCard style={styles.tripCardInner}>
+    <View
+      style={[
+        styles.tripCardInner,
+        {
+          backgroundColor: colors.bg.glass,
+          borderRadius: 16,
+          borderWidth: 1,
+          borderColor: colors.border.default,
+          padding: 16,
+        },
+      ]}
+    >
       <View style={styles.tripCardTop}>
         <View style={styles.tripIconWrap}>
           <TripIcon size={20} color={colors.accent.primary} />
@@ -320,7 +359,7 @@ function TripCard({ trip, colors }: { trip: Trip; colors: Colors }) {
           {formatCurrency(trip.totalSpend, trip.currency)}
         </Text>
       </View>
-    </GlassCard>
+    </View>
   );
 }
 
@@ -336,11 +375,19 @@ function ActiveTripsSection({
   if (isLoading) return <CardSkeleton />;
   if (activeTrips.length === 0) {
     return (
-      <GlassCard>
+      <View
+        style={{
+          backgroundColor: colors.bg.glass,
+          borderRadius: 16,
+          borderWidth: 1,
+          borderColor: colors.border.default,
+          padding: 16,
+        }}
+      >
         <Text style={[styles.emptyText, { color: colors.text.tertiary }]}>
           No active trips yet.
         </Text>
-      </GlassCard>
+      </View>
     );
   }
   return (
@@ -442,11 +489,19 @@ function RecentBillsSection({
     );
   if (singleBills.length === 0)
     return (
-      <GlassCard>
+      <View
+        style={{
+          backgroundColor: colors.bg.glass,
+          borderRadius: 16,
+          borderWidth: 1,
+          borderColor: colors.border.default,
+          padding: 16,
+        }}
+      >
         <Text style={[styles.emptyText, { color: colors.text.tertiary }]}>
           No bills yet. Split one!
         </Text>
-      </GlassCard>
+      </View>
     );
   return (
     <View style={styles.billsList}>
@@ -465,6 +520,8 @@ function QuickActionCard({
   accentColor,
   textPrimary,
   textTertiary,
+  cardBg,
+  cardBorder,
 }: {
   icon: typeof Camera;
   label: string;
@@ -473,6 +530,8 @@ function QuickActionCard({
   accentColor: string;
   textPrimary: string;
   textTertiary: string;
+  cardBg: string;
+  cardBorder: string;
 }) {
   return (
     <Pressable
@@ -485,7 +544,18 @@ function QuickActionCard({
         },
       ]}
     >
-      <GlassCard style={styles.quickActionCard}>
+      <View
+        style={[
+          styles.quickActionCard,
+          {
+            backgroundColor: cardBg,
+            borderRadius: 16,
+            borderWidth: 1,
+            borderColor: cardBorder,
+            padding: 16,
+          },
+        ]}
+      >
         <View
           style={[
             styles.quickActionIconBg,
@@ -500,7 +570,7 @@ function QuickActionCard({
         <Text style={[styles.quickActionSub, { color: textTertiary }]}>
           {sub}
         </Text>
-      </GlassCard>
+      </View>
     </Pressable>
   );
 }

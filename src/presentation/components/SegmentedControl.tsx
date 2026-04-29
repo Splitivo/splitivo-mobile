@@ -21,6 +21,7 @@ interface SegmentedControlProps<T extends string> {
   /** ms to wait before firing onSelect — lets the slide animation finish first */
   delay?: number;
   style?: ViewStyle;
+  liquidGlass?: "auto" | "disabled";
 }
 
 export function SegmentedControl<T extends string>({
@@ -30,6 +31,7 @@ export function SegmentedControl<T extends string>({
   onSelect,
   delay,
   style,
+  liquidGlass = "auto",
 }: SegmentedControlProps<T>) {
   const { colors, resolvedMode } = useTheme();
   const isLiquidGlass = useLiquidGlass();
@@ -111,6 +113,25 @@ export function SegmentedControl<T extends string>({
       ))}
     </View>
   );
+
+  if (liquidGlass === "disabled") {
+    return (
+      <View
+        style={[
+          styles.shadow,
+          styles.wrap,
+          {
+            backgroundColor: colors.bg.glass,
+            borderWidth: 1,
+            borderColor: colors.border.default,
+          },
+          style,
+        ]}
+      >
+        {inner}
+      </View>
+    );
+  }
 
   if (isLiquidGlass) {
     return (
