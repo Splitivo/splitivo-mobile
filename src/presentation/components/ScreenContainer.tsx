@@ -218,7 +218,7 @@ export function ScreenContainer({
                   isLargeTitle && !navBarTitle
                     ? insets.top + 16
                     : NAV_BAR_TOTAL + 16,
-                paddingHorizontal: 20,
+                paddingHorizontal: 16,
                 marginTop: refreshable ? -24 : 0,
               },
               contentContainerStyle,
@@ -412,6 +412,6 @@ const styles = StyleSheet.create({
   refreshSpinnerWrap: {
     alignItems: "center",
     paddingVertical: 10,
-    marginBottom: 4,
+    marginBottom: 20,
   },
 });
