@@ -1,13 +1,8 @@
 import React from "react";
-import {
-  Text,
-  Pressable,
-  StyleSheet,
-  ActivityIndicator,
-  ViewStyle,
-} from "react-native";
+import { Text, Pressable, StyleSheet, View, ViewStyle } from "react-native";
 import * as Haptics from "expo-haptics";
 import { useTheme } from "../../core/theme";
+import { Spinner } from "./Spinner";
 
 interface ButtonProps {
   title: string;
@@ -18,6 +13,7 @@ interface ButtonProps {
   disabled?: boolean;
   style?: ViewStyle;
   fullWidth?: boolean;
+  icon?: React.ReactNode;
 }
 
 export function Button({
@@ -29,6 +25,7 @@ export function Button({
   disabled = false,
   style,
   fullWidth = false,
+  icon,
 }: ButtonProps) {
   const { colors } = useTheme();
 
@@ -69,9 +66,9 @@ export function Button({
       style={({ pressed }) => [
         styles.button,
         {
-          backgroundColor: pressed ? colors.accent.pressed : bgColor,
+          backgroundColor: bgColor,
           height: heights[size],
-          opacity: disabled ? 0.4 : 1,
+          opacity: disabled ? 0.4 : pressed ? 0.65 : 1,
           borderColor,
           borderWidth:
             variant === "secondary" ? StyleSheet.hairlineWidth * 2 : 0,
@@ -81,13 +78,19 @@ export function Button({
       ]}
     >
       {loading ? (
-        <ActivityIndicator color={textColor} size="small" />
+        <Spinner size={18} color={textColor} strokeWidth={2} />
       ) : (
-        <Text
-          style={[styles.text, { color: textColor, fontSize: fontSizes[size] }]}
-        >
-          {title}
-        </Text>
+        <View style={styles.inner}>
+          {icon && <View style={styles.iconWrap}>{icon}</View>}
+          <Text
+            style={[
+              styles.text,
+              { color: textColor, fontSize: fontSizes[size] },
+            ]}
+          >
+            {title}
+          </Text>
+        </View>
       )}
     </Pressable>
   );
@@ -101,6 +104,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     minWidth: 44,
     minHeight: 44,
+  },
+  inner: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  iconWrap: {
+    alignItems: "center",
+    justifyContent: "center",
   },
   text: {
     fontFamily: "Geist_600SemiBold",
