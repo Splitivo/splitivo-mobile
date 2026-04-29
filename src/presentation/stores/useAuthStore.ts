@@ -2,7 +2,10 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthProvider, AuthSession } from "../../domain/entities/auth";
-import { mockSignIn } from "../../data/datasources/mockAuthService";
+import {
+  signInWithProvider,
+  SignInCancelledError,
+} from "../../services/auth/nativeAuthService";
 
 interface AuthState {
   session: AuthSession | null;
@@ -22,10 +25,18 @@ export const useAuthStore = create<AuthState>()(
       signIn: async (provider) => {
         set({ isLoading: true, error: null });
         try {
-          const session = await mockSignIn(provider);
+          const session = await signInWithProvider(provider);
           set({ session, isLoading: false });
-        } catch (e) {
-          set({ error: (e as Error).message, isLoading: false });
+        } catch (e: unknown) {
+          if (e instanceof SignInCancelledError) {
+            // User dismissed the native sign-in sheet — not an error
+            set({ isLoading: false });
+            return;
+          }
+          set({
+            error: (e as Error).message ?? "Sign in failed.",
+            isLoading: false,
+          });
         }
       },
 

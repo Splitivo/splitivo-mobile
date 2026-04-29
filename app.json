@@ -47,6 +47,14 @@
         {
           "photosPermission": "Allow Splitivo to access your photos to select receipts."
         }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosClientId": "101209994670-9t9qc1onn47n9j52g83o9qik77ur3d12.apps.googleusercontent.com",
+          "iosUrlScheme": "com.googleusercontent.apps.101209994670-9t9qc1onn47n9j52g83o9qik77ur3d12",
+          "googleServicesFile": "./src/services/auth/client_101209994670-9t9qc1onn47n9j52g83o9qik77ur3d12.apps.googleusercontent.com.plist"
+        }
       ]
     ]
   }

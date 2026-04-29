@@ -1,5 +1,5 @@
 import { AuthProvider, AuthSession } from "../../domain/entities/auth";
-import mockResponses from "../mocks/auth-response.json";
+import mockResponses from "../../data/mocks/auth-response.json";
 
 /** Simulates a POST /auth/:provider network call with 800ms latency. */
 export async function mockSignIn(provider: AuthProvider): Promise<AuthSession> {

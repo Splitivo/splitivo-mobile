@@ -14,6 +14,7 @@ import { Text } from "../../src/presentation/components/Text";
 import { router } from "expo-router";
 import { useTheme, ThemeMode } from "../../src/core/theme";
 import { useUserStore } from "../../src/presentation/stores/useUserStore";
+import { useAuthStore } from "../../src/presentation/stores/useAuthStore";
 import type { User } from "../../src/domain/entities/user";
 import { GlassCard } from "../../src/presentation/components/GlassCard";
 import { SegmentedControl } from "../../src/presentation/components/SegmentedControl";
@@ -311,7 +312,10 @@ export default function ProfileScreen() {
 
       {/* Sign Out */}
       <Pressable
-        onPress={() => {}}
+        onPress={() => {
+          useAuthStore.getState().signOut();
+          router.replace("/(auth)/welcome");
+        }}
         style={({ pressed }) => [
           styles.signOutBtn,
           {

@@ -13,7 +13,11 @@ export default function WelcomeScreen() {
 
   const handleSignIn = async (provider: "apple" | "google") => {
     await signIn(provider);
-    router.replace("/(tabs)");
+    // Only navigate if sign-in succeeded (no error set in store)
+    const { session } = useAuthStore.getState();
+    if (session) {
+      router.replace("/(tabs)");
+    }
   };
 
   return (
