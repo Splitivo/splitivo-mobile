@@ -3,8 +3,6 @@ import { Bill, BillItem, PersonBreakdown } from "../../domain/entities/bill";
 import { Participant } from "../../domain/entities/user";
 import { BillRepositoryImpl } from "../../data/repositories/BillRepositoryImpl";
 
-const billRepo = BillRepositoryImpl;
-
 interface BillState {
   bills: Bill[];
   currentBill: Bill | null;
@@ -63,7 +61,7 @@ export const useBillStore = create<BillState>((set, get) => ({
   fetchBills: async () => {
     set({ isLoading: true, error: null });
     try {
-      const bills = await billRepo.getBills();
+      const bills = await BillRepositoryImpl.getBills();
       set({ bills, isLoading: false });
     } catch (e) {
       set({ error: (e as Error).message, isLoading: false });
@@ -73,7 +71,7 @@ export const useBillStore = create<BillState>((set, get) => ({
   fetchBillById: async (id) => {
     set({ isLoading: true, error: null });
     try {
-      const bill = await billRepo.getBillById(id);
+      const bill = await BillRepositoryImpl.getBillById(id);
       set({ currentBill: bill, isLoading: false });
     } catch (e) {
       set({ error: (e as Error).message, isLoading: false });
@@ -82,7 +80,7 @@ export const useBillStore = create<BillState>((set, get) => ({
 
   fetchBreakdown: async (billId) => {
     try {
-      const breakdown = await billRepo.getPersonBreakdown(billId);
+      const breakdown = await BillRepositoryImpl.getPersonBreakdown(billId);
       set({ breakdown });
     } catch (e) {
       set({ error: (e as Error).message });
@@ -101,7 +99,7 @@ export const useBillStore = create<BillState>((set, get) => ({
       state.draftServiceCharge -
       state.draftDiscount;
 
-    const bill = await billRepo.createBill({
+    const bill = await BillRepositoryImpl.createBill({
       tripId,
       merchantName: state.draftMerchant,
       date: state.draftDate,
@@ -124,12 +122,12 @@ export const useBillStore = create<BillState>((set, get) => ({
   },
 
   settlePerson: async (billId, participantId) => {
-    await billRepo.settlePerson(billId, participantId);
+    await BillRepositoryImpl.settlePerson(billId, participantId);
     await get().fetchBillById(billId);
   },
 
   finalizeBill: async (billId) => {
-    await billRepo.finalizeBill(billId);
+    await BillRepositoryImpl.finalizeBill(billId);
     await get().fetchBills();
   },
 

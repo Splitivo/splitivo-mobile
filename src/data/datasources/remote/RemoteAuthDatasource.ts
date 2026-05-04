@@ -30,4 +30,17 @@ export class RemoteAuthDatasource {
 
     return json;
   }
+
+  async logout(refreshToken: string): Promise<void> {
+    const { url, method } = buildUrl(
+      ApiVersion.V1,
+      "auth/logout",
+      HttpMethod.Post,
+    );
+    await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
+    });
+  }
 }

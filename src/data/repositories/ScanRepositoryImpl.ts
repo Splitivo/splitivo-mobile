@@ -3,14 +3,13 @@ import { ScanResult } from "../../domain/entities/scan";
 import { MockScanDatasource } from "../datasources/mock/MockScanDatasource";
 import { withRepoLogging } from "../utils/withRepoLogging";
 
-const datasource = new MockScanDatasource();
-
 class ScanRepositoryBase implements ScanRepository {
+  private readonly datasource = new MockScanDatasource();
   async scanReceipt(
     imageBase64: string,
     currency: string,
   ): Promise<ScanResult> {
-    return datasource.scanReceipt(imageBase64, currency);
+    return this.datasource.scanReceipt(imageBase64, currency);
   }
 }
 

@@ -7,19 +7,18 @@ import {
 import { MockExpenseDatasource } from "../datasources/mock/MockExpenseDatasource";
 import { withRepoLogging } from "../utils/withRepoLogging";
 
-const datasource = new MockExpenseDatasource();
-
 class ExpenseRepositoryBase implements ExpenseRepository {
+  private readonly datasource = new MockExpenseDatasource();
   async getExpenses(): Promise<Expense[]> {
-    return datasource.getExpenses();
+    return this.datasource.getExpenses();
   }
 
   async getExpensesByPeriod(period: TimePeriod): Promise<Expense[]> {
-    return datasource.getExpensesByPeriod(period);
+    return this.datasource.getExpensesByPeriod(period);
   }
 
   async getCategoryBreakdown(period: TimePeriod): Promise<CategoryBreakdown[]> {
-    return datasource.getCategoryBreakdown(period);
+    return this.datasource.getCategoryBreakdown(period);
   }
 }
 

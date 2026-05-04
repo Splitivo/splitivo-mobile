@@ -2,8 +2,6 @@ import { create } from "zustand";
 import { User, BankAccount } from "../../domain/entities/user";
 import { UserRepositoryImpl } from "../../data/repositories/UserRepositoryImpl";
 
-const userRepo = UserRepositoryImpl;
-
 interface UserState {
   user: User | null;
   isLoading: boolean;
@@ -23,7 +21,7 @@ export const useUserStore = create<UserState>((set, get) => ({
   fetchUser: async () => {
     set({ isLoading: true, error: null });
     try {
-      const user = await userRepo.getCurrentUser();
+      const user = await UserRepositoryImpl.getCurrentUser();
       set({ user, isLoading: false });
     } catch (e) {
       set({ error: (e as Error).message, isLoading: false });
@@ -33,7 +31,7 @@ export const useUserStore = create<UserState>((set, get) => ({
   updateUser: async (update) => {
     set({ isLoading: true, error: null });
     try {
-      const user = await userRepo.updateUser(update);
+      const user = await UserRepositoryImpl.updateUser(update);
       set({ user, isLoading: false });
     } catch (e) {
       set({ error: (e as Error).message, isLoading: false });
@@ -44,7 +42,7 @@ export const useUserStore = create<UserState>((set, get) => ({
     const { user } = get();
     if (!user) return;
     const newAccount: BankAccount = { ...account, id: `ba${Date.now()}` };
-    const updated = await userRepo.updateUser({
+    const updated = await UserRepositoryImpl.updateUser({
       bankAccounts: [...user.bankAccounts, newAccount],
     });
     set({ user: updated });
@@ -53,7 +51,7 @@ export const useUserStore = create<UserState>((set, get) => ({
   removeBankAccount: async (accountId) => {
     const { user } = get();
     if (!user) return;
-    const updated = await userRepo.updateUser({
+    const updated = await UserRepositoryImpl.updateUser({
       bankAccounts: user.bankAccounts.filter((a) => a.id !== accountId),
     });
     set({ user: updated });
@@ -61,7 +59,7 @@ export const useUserStore = create<UserState>((set, get) => ({
   setDefaultBankAccount: async (accountId) => {
     const { user } = get();
     if (!user) return;
-    const updated = await userRepo.updateUser({
+    const updated = await UserRepositoryImpl.updateUser({
       bankAccounts: user.bankAccounts.map((a) => ({
         ...a,
         isDefault: a.id === accountId,

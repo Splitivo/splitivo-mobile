@@ -4,8 +4,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Currency } from "../../domain/entities/currency";
 import { CurrencyRepositoryImpl } from "../../data/repositories/CurrencyRepositoryImpl";
 
-const currencyRepo = CurrencyRepositoryImpl;
-
 interface CurrencyState {
   currencies: Currency[];
   selectedCurrency: Currency | null;
@@ -31,7 +29,7 @@ export const useCurrencyStore = create<CurrencyState>()(
       fetchCurrencies: async () => {
         set({ isLoading: true, error: null });
         try {
-          const currencies = await currencyRepo.getAll();
+          const currencies = await CurrencyRepositoryImpl.getAll();
           // Only set default if nothing was persisted
           const selected =
             get().selectedCurrency ??
@@ -44,7 +42,7 @@ export const useCurrencyStore = create<CurrencyState>()(
       },
 
       setCurrency: async (code) => {
-        const currency = await currencyRepo.getByCode(code);
+        const currency = await CurrencyRepositoryImpl.getByCode(code);
         if (currency) {
           set({ selectedCurrency: currency });
         }
@@ -55,7 +53,7 @@ export const useCurrencyStore = create<CurrencyState>()(
           set({ searchResults: [] });
           return;
         }
-        const results = await currencyRepo.search(query);
+        const results = await CurrencyRepositoryImpl.search(query);
         set({ searchResults: results });
       },
 

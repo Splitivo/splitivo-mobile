@@ -46,6 +46,11 @@ class AuthRepositoryBase implements AuthRepository {
     await this.local.saveSession(session);
     return session;
   }
+
+  async logout(refreshToken: string): Promise<void> {
+    await this.remote.logout(refreshToken);
+    await this.local.clearSession();
+  }
 }
 
 export const AuthRepositoryImpl = withRepoLogging(

@@ -7,12 +7,15 @@ import {
   SignInCancelledError,
 } from "../../services/auth/nativeAuthService";
 
+import { AuthRepositoryImpl } from "../../data/repositories/AuthRepositoryImpl";
+
 interface AuthState {
   session: AuthSession | null;
   isLoading: boolean;
+  isSigningOut: boolean;
   error: string | null;
   signIn: (provider: AuthProvider) => Promise<void>;
-  signOut: () => void;
+  signOut: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -20,6 +23,7 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       session: null,
       isLoading: false,
+      isSigningOut: false,
       error: null,
 
       signIn: async (provider) => {
@@ -40,8 +44,16 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      signOut: () => {
-        set({ session: null, error: null });
+      signOut: async () => {
+        set({ isSigningOut: true });
+        try {
+          const session = useAuthStore.getState().session;
+          if (session) {
+            await AuthRepositoryImpl.logout(session.refreshToken);
+          }
+        } finally {
+          set({ session: null, error: null, isSigningOut: false });
+        }
       },
     }),
     {

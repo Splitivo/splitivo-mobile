@@ -3,19 +3,18 @@ import { Currency } from "../../domain/entities/currency";
 import { CurrencyLocalDatasource } from "../datasources/local/CurrencyLocalDatasource";
 import { withRepoLogging } from "../utils/withRepoLogging";
 
-const datasource = new CurrencyLocalDatasource();
-
 class CurrencyRepositoryBase implements CurrencyRepository {
+  private readonly datasource = new CurrencyLocalDatasource();
   async getAll(): Promise<Currency[]> {
-    return datasource.getAll();
+    return this.datasource.getAll();
   }
 
   async getByCode(code: string): Promise<Currency | undefined> {
-    return datasource.getByCode(code);
+    return this.datasource.getByCode(code);
   }
 
   async search(query: string): Promise<Currency[]> {
-    return datasource.search(query);
+    return this.datasource.search(query);
   }
 }
 

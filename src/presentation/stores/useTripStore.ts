@@ -2,8 +2,6 @@ import { create } from "zustand";
 import { Trip, TransferOptimizationResult } from "../../domain/entities/trip";
 import { TripRepositoryImpl } from "../../data/repositories/TripRepositoryImpl";
 
-const tripRepo = TripRepositoryImpl;
-
 interface TripState {
   trips: Trip[];
   currentTrip: Trip | null;
@@ -30,7 +28,7 @@ export const useTripStore = create<TripState>((set, get) => ({
   fetchTrips: async () => {
     set({ isLoading: true, error: null });
     try {
-      const trips = await tripRepo.getTrips();
+      const trips = await TripRepositoryImpl.getTrips();
       set({ trips, isLoading: false });
     } catch (e) {
       set({ error: (e as Error).message, isLoading: false });
@@ -40,7 +38,7 @@ export const useTripStore = create<TripState>((set, get) => ({
   fetchTripById: async (id) => {
     set({ isLoading: true, error: null });
     try {
-      const trip = await tripRepo.getTripById(id);
+      const trip = await TripRepositoryImpl.getTripById(id);
       set({ currentTrip: trip, isLoading: false });
     } catch (e) {
       set({ error: (e as Error).message, isLoading: false });
@@ -50,7 +48,7 @@ export const useTripStore = create<TripState>((set, get) => ({
   createTrip: async (trip) => {
     set({ isLoading: true, error: null });
     try {
-      const newTrip = await tripRepo.createTrip(trip);
+      const newTrip = await TripRepositoryImpl.createTrip(trip);
       set((s) => ({ trips: [...s.trips, newTrip], isLoading: false }));
       return newTrip;
     } catch (e) {
@@ -61,7 +59,7 @@ export const useTripStore = create<TripState>((set, get) => ({
 
   fetchOptimizedTransfers: async (tripId) => {
     try {
-      const transfers = await tripRepo.getOptimizedTransfers(tripId);
+      const transfers = await TripRepositoryImpl.getOptimizedTransfers(tripId);
       set({ transfers });
     } catch (e) {
       set({ error: (e as Error).message });
@@ -69,7 +67,7 @@ export const useTripStore = create<TripState>((set, get) => ({
   },
 
   finalizeTrip: async (tripId) => {
-    await tripRepo.finalizeTrip(tripId);
+    await TripRepositoryImpl.finalizeTrip(tripId);
     await get().fetchTrips();
   },
 }));

@@ -6,6 +6,7 @@ import {
   Switch,
   Platform,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import ReanimatedSwipeable, {
   SwipeableMethods,
@@ -60,6 +61,7 @@ export default function ProfileScreen() {
   const { removeBankAccount, setDefaultBankAccount } = useUserStore();
   const { selectedCurrency, fetchCurrencies } = useCurrencyStore();
   const { liquidGlassEnabled, setLiquidGlassEnabled } = useUIStore();
+  const isSigningOut = useAuthStore((s) => s.isSigningOut);
   const [visibleAccounts, setVisibleAccounts] = useState<Set<string>>(
     new Set(),
   );
@@ -312,22 +314,27 @@ export default function ProfileScreen() {
 
       {/* Sign Out */}
       <Pressable
-        onPress={() => {
-          useAuthStore.getState().signOut();
+        onPress={async () => {
+          await useAuthStore.getState().signOut();
           router.replace("/(auth)/welcome");
         }}
+        disabled={isSigningOut}
         style={({ pressed }) => [
           styles.signOutBtn,
           {
             backgroundColor: colors.bg.glass,
             borderColor: colors.border.default,
-            opacity: pressed ? 0.8 : 1,
+            opacity: pressed || isSigningOut ? 0.6 : 1,
           },
         ]}
       >
-        <LogOut size={16} color={colors.text.destructive} />
+        {isSigningOut ? (
+          <ActivityIndicator size="small" color={colors.text.destructive} />
+        ) : (
+          <LogOut size={16} color={colors.text.destructive} />
+        )}
         <Text style={[styles.signOutText, { color: colors.text.destructive }]}>
-          Sign Out
+          {isSigningOut ? "Signing out…" : "Sign Out"}
         </Text>
       </Pressable>
 

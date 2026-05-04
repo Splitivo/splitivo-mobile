@@ -6,8 +6,6 @@ import {
 } from "../../domain/entities/expense";
 import { ExpenseRepositoryImpl } from "../../data/repositories/ExpenseRepositoryImpl";
 
-const expenseRepo = ExpenseRepositoryImpl;
-
 interface ExpenseState {
   expenses: Expense[];
   categoryBreakdown: CategoryBreakdown[];
@@ -44,8 +42,8 @@ export const useExpenseStore = create<ExpenseState>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const [expenses, categoryBreakdown] = await Promise.all([
-        expenseRepo.getExpensesByPeriod(period),
-        expenseRepo.getCategoryBreakdown(period),
+        ExpenseRepositoryImpl.getExpensesByPeriod(period),
+        ExpenseRepositoryImpl.getCategoryBreakdown(period),
       ]);
       // Only commit if period hasn't changed while we were waiting
       if (get().selectedPeriod === period) {
@@ -59,7 +57,7 @@ export const useExpenseStore = create<ExpenseState>((set, get) => ({
   fetchExpenses: async () => {
     set({ isLoading: true, error: null });
     try {
-      const expenses = await expenseRepo.getExpensesByPeriod(
+      const expenses = await ExpenseRepositoryImpl.getExpensesByPeriod(
         get().selectedPeriod,
       );
       set({ expenses, isLoading: false });
@@ -70,7 +68,7 @@ export const useExpenseStore = create<ExpenseState>((set, get) => ({
 
   fetchCategoryBreakdown: async () => {
     try {
-      const breakdown = await expenseRepo.getCategoryBreakdown(
+      const breakdown = await ExpenseRepositoryImpl.getCategoryBreakdown(
         get().selectedPeriod,
       );
       set({ categoryBreakdown: breakdown });

@@ -3,19 +3,18 @@ import { User, Participant } from "../../domain/entities/user";
 import { MockUserDatasource } from "../datasources/mock/MockUserDatasource";
 import { withRepoLogging } from "../utils/withRepoLogging";
 
-const datasource = new MockUserDatasource();
-
 class UserRepositoryBase implements UserRepository {
+  private readonly datasource = new MockUserDatasource();
   async getCurrentUser(): Promise<User> {
-    return datasource.getCurrentUser();
+    return this.datasource.getCurrentUser();
   }
 
   async updateUser(user: Partial<User>): Promise<User> {
-    return datasource.updateUser(user);
+    return this.datasource.updateUser(user);
   }
 
   async searchParticipants(query: string): Promise<Participant[]> {
-    return datasource.searchParticipants(query);
+    return this.datasource.searchParticipants(query);
   }
 }
 
