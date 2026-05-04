@@ -1,8 +1,8 @@
-import { appConfig } from "../core/config/environment";
+import { appConfig, Environment } from "../../core/config/environment";
 import {
   useLoggerStore,
   LogLevel,
-} from "../presentation/stores/useLoggerStore";
+} from "../../presentation/stores/useLoggerStore";
 
 function log(level: LogLevel, tag: string | undefined, messages: unknown[]) {
   // Always forward to the native console
@@ -19,7 +19,7 @@ function log(level: LogLevel, tag: string | undefined, messages: unknown[]) {
   consoleFn(prefix, ...messages);
 
   // Store in the sheet only for dev/smoke
-  if (appConfig.env === "prod") return;
+  if (appConfig.env === Environment.Prod) return;
 
   useLoggerStore.getState().addLog({
     level,

@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { StyleSheet, View, PanResponder, Dimensions } from "react-native";
 import { Bug } from "lucide-react-native";
 import { router } from "expo-router";
-import { appConfig } from "../../core/config/environment";
+import { appConfig, Environment } from "../../core/config/environment";
 
 const BUTTON_SIZE = 44;
 const EDGE_PADDING = 16;
@@ -12,7 +12,7 @@ const EDGE_PADDING = 16;
  * Only visible in `dev` and `smoke` environments.
  */
 export function FloatingDebugButton() {
-  if (appConfig.env === "prod") return null;
+  if (appConfig.env === Environment.Prod) return null;
 
   const { width, height } = Dimensions.get("window");
 

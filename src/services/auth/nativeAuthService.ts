@@ -1,9 +1,9 @@
 import * as AppleAuthentication from "expo-apple-authentication";
 import type { GoogleSignin as GoogleSigninType } from "@react-native-google-signin/google-signin";
 import { AuthProvider, AuthSession } from "../../domain/entities/auth";
-import { mockSignIn } from "./mockAuthService";
 import { appConfig } from "../../core/config";
-import { Logger } from "../../core/logger";
+import { Logger } from "../../data/utils/logger";
+import { AuthRepositoryImpl } from "../../data/repositories/AuthRepositoryImpl";
 
 // ---------------------------------------------------------------------------
 // Lazy Google Sign-In accessor — avoids touching the native module at load time
@@ -116,27 +116,31 @@ function rethrow(e: unknown): never {
 }
 
 // ---------------------------------------------------------------------------
-// Unified sign-in — triggers the native SDK then posts to the (mock) API
+// Unified sign-in — triggers the native SDK then posts to the backend
 // ---------------------------------------------------------------------------
 export async function signInWithProvider(
   provider: AuthProvider,
 ): Promise<AuthSession> {
   if (provider === "apple") {
+    let identityToken: string;
     try {
-      await appleSignIn();
+      const result = await appleSignIn();
+      identityToken = result.identityToken;
     } catch (e) {
       rethrow(e);
     }
-    return mockSignIn("apple");
+    return AuthRepositoryImpl.loginWithApple(identityToken!);
   }
 
   if (provider === "google") {
+    let idToken: string;
     try {
-      await googleSignIn();
+      const result = await googleSignIn();
+      idToken = result.idToken;
     } catch (e) {
       rethrow(e);
     }
-    return mockSignIn("google");
+    return AuthRepositoryImpl.loginWithGoogle(idToken!);
   }
 
   throw new Error(`Unsupported provider: ${provider}`);

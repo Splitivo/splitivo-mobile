@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Accelerometer } from "expo-sensors";
 import { router } from "expo-router";
-import { appConfig } from "../core/config/environment";
+import { appConfig, Environment } from "../core/config/environment";
 
 const SHAKE_THRESHOLD = 1.8; // G-force delta — works for both simulator and physical device
 const SHAKE_COOLDOWN_MS = 1500;
@@ -17,7 +17,7 @@ export function useShakeToDebug() {
   const prev = useRef({ x: 0, y: 0, z: 0 });
 
   useEffect(() => {
-    if (appConfig.env === "prod") return;
+    if (appConfig.env === Environment.Prod) return;
 
     Accelerometer.setUpdateInterval(100);
 

@@ -1,4 +1,8 @@
-import { appConfig } from "../../../core/config/environment";
+import {
+  buildUrl,
+  ApiVersion,
+  HttpMethod,
+} from "../../../core/config/environment";
 import { Bill, PersonBreakdown } from "../../../domain/entities/bill";
 
 /**
@@ -6,21 +10,25 @@ import { Bill, PersonBreakdown } from "../../../domain/entities/bill";
  * Currently inactive; mock datasource is used instead.
  */
 export class RemoteBillDatasource {
-  private baseUrl = appConfig.apiUrl;
-
   async getBills(): Promise<Bill[]> {
-    const res = await fetch(`${this.baseUrl}/bills`);
+    const { url, method } = buildUrl(ApiVersion.V1, "bills");
+    const res = await fetch(url, { method });
     return res.json();
   }
 
   async getBillById(id: string): Promise<Bill> {
-    const res = await fetch(`${this.baseUrl}/bills/${encodeURIComponent(id)}`);
+    const { url, method } = buildUrl(
+      ApiVersion.V1,
+      `bills/${encodeURIComponent(id)}`,
+    );
+    const res = await fetch(url, { method });
     return res.json();
   }
 
   async createBill(bill: Omit<Bill, "id" | "createdAt">): Promise<Bill> {
-    const res = await fetch(`${this.baseUrl}/bills`, {
-      method: "POST",
+    const { url, method } = buildUrl(ApiVersion.V1, "bills", HttpMethod.Post);
+    const res = await fetch(url, {
+      method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(bill),
     });
@@ -28,8 +36,13 @@ export class RemoteBillDatasource {
   }
 
   async updateBill(id: string, update: Partial<Bill>): Promise<Bill> {
-    const res = await fetch(`${this.baseUrl}/bills/${encodeURIComponent(id)}`, {
-      method: "PATCH",
+    const { url, method } = buildUrl(
+      ApiVersion.V1,
+      `bills/${encodeURIComponent(id)}`,
+      HttpMethod.Patch,
+    );
+    const res = await fetch(url, {
+      method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(update),
     });
@@ -37,27 +50,29 @@ export class RemoteBillDatasource {
   }
 
   async getPersonBreakdown(billId: string): Promise<PersonBreakdown[]> {
-    const res = await fetch(
-      `${this.baseUrl}/bills/${encodeURIComponent(billId)}/breakdown`,
+    const { url, method } = buildUrl(
+      ApiVersion.V1,
+      `bills/${encodeURIComponent(billId)}/breakdown`,
     );
+    const res = await fetch(url, { method });
     return res.json();
   }
 
   async settlePerson(billId: string, participantId: string): Promise<void> {
-    await fetch(
-      `${this.baseUrl}/bills/${encodeURIComponent(billId)}/settle/${encodeURIComponent(participantId)}`,
-      {
-        method: "POST",
-      },
+    const { url, method } = buildUrl(
+      ApiVersion.V1,
+      `bills/${encodeURIComponent(billId)}/settle/${encodeURIComponent(participantId)}`,
+      HttpMethod.Post,
     );
+    await fetch(url, { method });
   }
 
   async finalizeBill(billId: string): Promise<void> {
-    await fetch(
-      `${this.baseUrl}/bills/${encodeURIComponent(billId)}/finalize`,
-      {
-        method: "POST",
-      },
+    const { url, method } = buildUrl(
+      ApiVersion.V1,
+      `bills/${encodeURIComponent(billId)}/finalize`,
+      HttpMethod.Post,
     );
+    await fetch(url, { method });
   }
 }

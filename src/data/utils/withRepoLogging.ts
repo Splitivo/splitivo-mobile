@@ -1,4 +1,4 @@
-import { appConfig } from "../../core/config/environment";
+import { appConfig, Environment } from "../../core/config/environment";
 import { useRepoLoggerStore } from "../../presentation/stores/useRepoLoggerStore";
 
 /**
@@ -10,7 +10,7 @@ export function withRepoLogging<T extends object>(
   repoClass: string,
   impl: T,
 ): T {
-  if (appConfig.env === "prod") return impl;
+  if (appConfig.env === Environment.Prod) return impl;
 
   return new Proxy(impl, {
     get(target, prop, receiver) {
