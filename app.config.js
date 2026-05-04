@@ -1,12 +1,27 @@
-const IS_DEV = process.env.APP_ENV === "dev";
+const APP_ENV = process.env.APP_ENV ?? "prod";
+const IS_DEV = APP_ENV === "dev";
+const IS_SMOKE = APP_ENV === "smoke";
 
-const appName = IS_DEV ? "Splitivo Dev" : "Splitivo";
+const appName = IS_DEV
+  ? "Splitivo Dev"
+  : IS_SMOKE
+    ? "Splitivo Smoke"
+    : "Splitivo";
 const iosBundleId = IS_DEV
   ? "com.quellixstudio.splitivo-dev"
-  : "com.quellixstudio.splitivo";
+  : IS_SMOKE
+    ? "com.quellixstudio.splitivo-smoke"
+    : "com.quellixstudio.splitivo";
 const androidPackage = IS_DEV
   ? "com.quellixstudio.splitivo_dev"
-  : "com.quellixstudio.splitivo";
+  : IS_SMOKE
+    ? "com.quellixstudio.splitivo_smoke"
+    : "com.quellixstudio.splitivo";
+const icon = IS_DEV
+  ? "./assets/icons/icon-dev.png"
+  : IS_SMOKE
+    ? "./assets/icons/icon-smoke.png"
+    : "./assets/icons/icon-prod.png";
 
 /** @type {import('expo/config').ExpoConfig} */
 module.exports = {
@@ -15,7 +30,7 @@ module.exports = {
     slug: "splitivo-mobile",
     version: "0.0.1",
     orientation: "portrait",
-    icon: "./assets/icon.png",
+    icon: icon,
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
     scheme: IS_DEV ? "splitivo-dev" : "splitivo",
@@ -34,7 +49,7 @@ module.exports = {
     },
     android: {
       adaptiveIcon: {
-        foregroundImage: "./assets/adaptive-icon.png",
+        foregroundImage: icon,
         backgroundColor: "#09090B",
       },
       edgeToEdgeEnabled: true,
@@ -42,7 +57,7 @@ module.exports = {
       permissions: ["android.permission.CAMERA"],
     },
     web: {
-      favicon: "./assets/favicon.png",
+      favicon: icon,
       bundler: "metro",
     },
     plugins: [
