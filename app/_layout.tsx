@@ -17,6 +17,7 @@ import {
   Geist_700Bold,
   Geist_800ExtraBold,
 } from "@expo-google-fonts/geist";
+import { Toaster } from "sonner-native";
 import "../global.css";
 
 const DARK_GRADIENT = ["#141414", "#0A0A0A", "#000000"] as const;
@@ -123,6 +124,28 @@ function RootLayoutInner() {
         />
       </Stack>
       <FloatingDebugButton />
+      <Toaster
+        position="bottom-center"
+        theme={isDark ? "dark" : "light"}
+        duration={1200}
+        toastOptions={{
+          style: {
+            backgroundColor: isDark
+              ? "rgba(20, 20, 20, 0.92)"
+              : "rgba(255, 255, 255, 0.92)",
+            borderWidth: 1,
+            borderColor: isDark
+              ? "rgba(255, 255, 255, 0.10)"
+              : "rgba(0, 0, 0, 0.08)",
+            borderRadius: 14,
+          },
+          titleStyle: {
+            fontFamily: "Geist_500Medium",
+            fontSize: 14,
+            color: isDark ? "#FFFFFF" : "#0A0A0A",
+          },
+        }}
+      />
     </GestureHandlerRootView>
   );
 }

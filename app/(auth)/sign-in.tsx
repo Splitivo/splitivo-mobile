@@ -7,6 +7,9 @@ import { router } from "expo-router";
 import { useTheme } from "../../src/core/theme";
 import { Button } from "../../src/presentation/components/Button";
 import { useAuthStore } from "../../src/presentation/stores/useAuthStore";
+import { Logger } from "../../src/data/utils/logger";
+import { toast } from "sonner-native";
+import { appConfig } from "../../src/core/config";
 
 function AppleIcon({ color }: { color: string }) {
   return (
@@ -46,19 +49,34 @@ function GoogleIcon() {
 
 export default function WelcomeScreen() {
   const { colors } = useTheme();
-  const { signIn, isLoading, error } = useAuthStore();
+  const { signIn, isLoading } = useAuthStore();
   const [loadingProvider, setLoadingProvider] = useState<
     "apple" | "google" | null
   >(null);
 
   const handleSignIn = async (provider: "apple" | "google") => {
     setLoadingProvider(provider);
-    await signIn(provider);
-    setLoadingProvider(null);
-    // Only navigate if sign-in succeeded (no error set in store)
-    const { session } = useAuthStore.getState();
-    if (session) {
-      router.replace("/(tabs)");
+    try {
+      await signIn(provider);
+      const { session, error } = useAuthStore.getState();
+      if (error) {
+        toast.error(
+          appConfig.env !== "prod"
+            ? error
+            : "Sign in failed. Please try again.",
+        );
+      } else if (session) {
+        router.replace("/(tabs)");
+      }
+    } catch (e) {
+      Logger.tag("SIGN IN").error(`${provider} sign in error`, e);
+      const message =
+        appConfig.env !== "prod"
+          ? ((e as Error)?.message ?? "Sign in failed. Please try again.")
+          : "Sign in failed. Please try again.";
+      toast.error(message);
+    } finally {
+      setLoadingProvider(null);
     }
   };
 
@@ -124,10 +142,5 @@ const styles = StyleSheet.create({
   },
   authButtons: {
     gap: 12,
-  },
-  error: {
-    fontSize: 13,
-    textAlign: "center",
-    marginTop: 4,
   },
 });
