@@ -6,7 +6,6 @@ import {
   Switch,
   Platform,
   Alert,
-  ActivityIndicator,
 } from "react-native";
 import ReanimatedSwipeable, {
   SwipeableMethods,
@@ -26,6 +25,7 @@ import { isLiquidGlassAvailable } from "expo-glass-effect";
 import Constants from "expo-constants";
 import { useUIStore } from "../../src/presentation/stores/useUIStore";
 import { ScreenContainer } from "../../src/presentation/components/ScreenContainer";
+import { Button } from "../../src/presentation/components/Button";
 import {
   ChevronRight,
   CreditCard,
@@ -313,30 +313,20 @@ export default function ProfileScreen() {
       </ProfileSection>
 
       {/* Sign Out */}
-      <Pressable
+      <Button
+        glass
+        title={isSigningOut ? "Signing out…" : "Sign Out"}
         onPress={async () => {
           await useAuthStore.getState().signOut();
-          router.replace("/(auth)/welcome");
+          router.replace("/(auth)/sign-in");
         }}
+        loading={isSigningOut}
         disabled={isSigningOut}
-        style={({ pressed }) => [
-          styles.signOutBtn,
-          {
-            backgroundColor: colors.bg.glass,
-            borderColor: colors.border.default,
-            opacity: pressed || isSigningOut ? 0.6 : 1,
-          },
-        ]}
-      >
-        {isSigningOut ? (
-          <ActivityIndicator size="small" color={colors.text.destructive} />
-        ) : (
-          <LogOut size={16} color={colors.text.destructive} />
-        )}
-        <Text style={[styles.signOutText, { color: colors.text.destructive }]}>
-          {isSigningOut ? "Signing out…" : "Sign Out"}
-        </Text>
-      </Pressable>
+        textColor={colors.text.destructive}
+        icon={<LogOut size={16} color={colors.text.destructive} />}
+        fullWidth
+        style={{ marginTop: 28 }}
+      />
 
       <Text style={[styles.versionText, { color: colors.text.tertiary }]}>
         Splitivo v{Constants.expoConfig?.version ?? "0.0.1"}
@@ -619,17 +609,5 @@ const styles = StyleSheet.create({
   profileRowLabel: { flex: 1, fontSize: 14 },
   profileRowTrail: { fontSize: 12 },
 
-  // Sign out
-  signOutBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-    marginTop: 28,
-    paddingVertical: 14,
-    borderRadius: 16,
-    borderWidth: 1,
-  },
-  signOutText: { fontSize: 15, fontWeight: "500" },
   versionText: { textAlign: "center", fontSize: 13, marginTop: 24 },
 });

@@ -11,9 +11,11 @@ interface ButtonProps {
   size?: "sm" | "md" | "lg";
   loading?: boolean;
   disabled?: boolean;
+  glass?: boolean;
   style?: ViewStyle;
   fullWidth?: boolean;
   icon?: React.ReactNode;
+  textColor?: string;
 }
 
 export function Button({
@@ -23,9 +25,11 @@ export function Button({
   size = "md",
   loading = false,
   disabled = false,
+  glass = false,
   style,
   fullWidth = false,
   icon,
+  textColor,
 }: ButtonProps) {
   const { colors } = useTheme();
 
@@ -35,26 +39,32 @@ export function Button({
     onPress();
   };
 
-  const bgColor = {
+  const variantBgColor = {
     primary: colors.accent.primary,
     secondary: "transparent",
     destructive: colors.status.error,
     ghost: "transparent",
   }[variant];
 
-  const textColor = {
+  const bgColor = glass ? colors.bg.glass : variantBgColor;
+
+  const defaultTextColor = {
     primary: colors.text.onAccent,
     secondary: colors.text.primary,
     destructive: colors.text.onAccent,
     ghost: colors.accent.primary,
   }[variant];
 
-  const borderColor = {
+  const resolvedTextColor = textColor ?? defaultTextColor;
+
+  const variantBorderColor = {
     primary: "transparent",
     secondary: colors.border.default,
     destructive: "transparent",
     ghost: "transparent",
   }[variant];
+
+  const borderColor = glass ? colors.border.default : variantBorderColor;
 
   const heights = { sm: 36, md: 46, lg: 54 };
   const fontSizes = { sm: 13, md: 15, lg: 17 };
@@ -71,21 +81,21 @@ export function Button({
           opacity: disabled ? 0.4 : pressed ? 0.65 : 1,
           borderColor,
           borderWidth:
-            variant === "secondary" ? StyleSheet.hairlineWidth * 2 : 0,
+            glass || variant === "secondary" ? StyleSheet.hairlineWidth * 2 : 0,
         },
         fullWidth && styles.fullWidth,
         style,
       ]}
     >
       {loading ? (
-        <Spinner size={18} color={textColor} strokeWidth={2} />
+        <Spinner size={18} color={resolvedTextColor} strokeWidth={2} />
       ) : (
         <View style={styles.inner}>
           {icon && <View style={styles.iconWrap}>{icon}</View>}
           <Text
             style={[
               styles.text,
-              { color: textColor, fontSize: fontSizes[size] },
+              { color: resolvedTextColor, fontSize: fontSizes[size] },
             ]}
           >
             {title}

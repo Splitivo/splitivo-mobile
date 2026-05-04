@@ -38,7 +38,7 @@ function RootLayoutInner() {
     if (session) {
       router.replace("/(tabs)");
     } else {
-      router.replace("/(auth)/welcome");
+      router.replace("/(auth)/sign-in");
     }
   }, [session]);
 

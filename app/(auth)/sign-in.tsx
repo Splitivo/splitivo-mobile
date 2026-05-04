@@ -80,8 +80,9 @@ export default function WelcomeScreen() {
               title="Sign in with Apple"
               onPress={() => handleSignIn("apple")}
               variant="secondary"
+              glass
               fullWidth
-              disabled={isLoading}
+              disabled={isLoading && loadingProvider === "apple"}
               loading={loadingProvider === "apple"}
               icon={<AppleIcon color={colors.text.primary} />}
             />
@@ -90,8 +91,9 @@ export default function WelcomeScreen() {
             title="Sign in with Google"
             onPress={() => handleSignIn("google")}
             variant="secondary"
+            glass
             fullWidth
-            disabled={isLoading}
+            disabled={isLoading && loadingProvider === "google"}
             loading={loadingProvider === "google"}
             icon={<GoogleIcon />}
           />
