@@ -23,6 +23,8 @@ import { SegmentedControl } from "./SegmentedControl";
 import { useCurrencyStore } from "../../../src/presentation/stores/useCurrencyStore";
 import { useUIStore } from "../../../src/presentation/stores/useUIStore";
 import { BottomSheetScreen } from "./BottomSheetScreen";
+import { RepoLoggerScreen } from "./RepoLoggerScreen";
+import { LoggerScreen } from "./LoggerScreen";
 
 /**
  * Debug Bottom Sheet Component
@@ -56,6 +58,8 @@ const THEME_LABELS: Record<ThemeMode, string> = {
   system: "System",
 };
 
+type DebugPage = "home" | "repo-logger" | "logger";
+
 export function DebugBottomSheet() {
   const { colors, mode, setMode } = useTheme();
   const { selectedCurrency, currencies, setCurrency } = useCurrencyStore();
@@ -65,8 +69,9 @@ export function DebugBottomSheet() {
     parseInt(Platform.Version as unknown as string, 10) >= 26 &&
     isLiquidGlassAvailable();
   const [navigationPath, setNavigationPath] = useState("");
+  const [activePage, setActivePage] = useState<DebugPage>("home");
   const [expandedSections, setExpandedSections] = useState<Set<string>>(
-    new Set(["Navigation", "Theme", "Stores"]),
+    new Set(["Navigation", "Theme"]),
   );
 
   const toggleSection = useCallback((sectionTitle: string) => {
@@ -284,6 +289,61 @@ export function DebugBottomSheet() {
       ],
     },
     {
+      title: "Logger",
+      tools: [
+        {
+          id: "repo-logger",
+          label: "Repo Logger",
+          component: (
+            <Pressable
+              key="repo-logger"
+              style={[
+                styles.toolContainer,
+                styles.navRow,
+                {
+                  backgroundColor: colors.bg.container,
+                  borderColor: colors.border.default,
+                },
+              ]}
+              onPress={() => setActivePage("repo-logger")}
+            >
+              <Text
+                style={[styles.navRowLabel, { color: colors.text.primary }]}
+              >
+                Repo Logger
+              </Text>
+              <ChevronRight size={16} color={colors.text.tertiary} />
+            </Pressable>
+          ),
+        },
+        {
+          id: "logger",
+          label: "Logger",
+          component: (
+            <Pressable
+              key="logger"
+              style={[
+                styles.toolContainer,
+                styles.navRow,
+                {
+                  backgroundColor: colors.bg.container,
+                  borderColor: colors.border.default,
+                },
+              ]}
+              onPress={() => setActivePage("logger")}
+            >
+              <Text
+                style={[styles.navRowLabel, { color: colors.text.primary }]}
+              >
+                Logger
+              </Text>
+              <ChevronRight size={16} color={colors.text.tertiary} />
+            </Pressable>
+          ),
+        },
+      ],
+    },
+    {
       title: "Stores",
       tools: [
         {
@@ -326,6 +386,34 @@ export function DebugBottomSheet() {
       ],
     },
   ];
+
+  if (activePage === "logger") {
+    return (
+      <BottomSheetScreen
+        title=""
+        trailingItem={{
+          icon: <X size={20} color={colors.text.secondary} />,
+          callback: () => router.back(),
+        }}
+      >
+        <LoggerScreen onBack={() => setActivePage("home")} />
+      </BottomSheetScreen>
+    );
+  }
+
+  if (activePage === "repo-logger") {
+    return (
+      <BottomSheetScreen
+        title=""
+        trailingItem={{
+          icon: <X size={20} color={colors.text.secondary} />,
+          callback: () => router.back(),
+        }}
+      >
+        <RepoLoggerScreen onBack={() => setActivePage("home")} />
+      </BottomSheetScreen>
+    );
+  }
 
   return (
     <BottomSheetScreen
@@ -482,5 +570,19 @@ const styles = StyleSheet.create({
   dangerButtonText: {
     fontSize: 16,
     fontWeight: "600",
+  },
+  navRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    marginTop: 0,
+  },
+  navRowLabel: {
+    fontSize: 14,
+    fontWeight: "500",
   },
 });

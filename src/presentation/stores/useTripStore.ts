@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { Trip, TransferOptimizationResult } from "../../domain/entities/trip";
 import { TripRepositoryImpl } from "../../data/repositories/TripRepositoryImpl";
 
-const tripRepo = new TripRepositoryImpl();
+const tripRepo = TripRepositoryImpl;
 
 interface TripState {
   trips: Trip[];

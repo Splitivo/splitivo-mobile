@@ -8,6 +8,7 @@ import { ThemeProvider, useTheme } from "../src/core/theme";
 import { useLiquidGlass } from "../src/hooks/useLiquidGlass";
 import { useUIStore } from "../src/presentation/stores/useUIStore";
 import { useAuthStore } from "../src/presentation/stores/useAuthStore";
+import { FloatingDebugButton } from "../src/presentation/components/FloatingDebugButton";
 import {
   useFonts,
   Geist_400Regular,
@@ -121,6 +122,7 @@ function RootLayoutInner() {
           }}
         />
       </Stack>
+      <FloatingDebugButton />
     </GestureHandlerRootView>
   );
 }

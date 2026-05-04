@@ -2,6 +2,8 @@ import * as AppleAuthentication from "expo-apple-authentication";
 import type { GoogleSignin as GoogleSigninType } from "@react-native-google-signin/google-signin";
 import { AuthProvider, AuthSession } from "../../domain/entities/auth";
 import { mockSignIn } from "./mockAuthService";
+import { appConfig } from "../../core/config";
+import { Logger } from "../../core/logger";
 
 // ---------------------------------------------------------------------------
 // Lazy Google Sign-In accessor — avoids touching the native module at load time
@@ -51,6 +53,10 @@ async function appleSignIn(): Promise<{
         .join(" ") || null
     : null;
 
+  if (appConfig.env !== "prod") {
+    Logger.tag("SIGN IN - APPLE").log("credential --> ", credential);
+  }
+
   return {
     identityToken: credential.identityToken,
     email: credential.email ?? null,
@@ -76,6 +82,10 @@ async function googleSignIn(): Promise<{
 
   if (!userInfo?.idToken) {
     throw new Error("Google Sign In failed: no ID token returned.");
+  }
+
+  if (appConfig.env !== "prod") {
+    Logger.tag("SIGN IN - GOOGLE").log("userInfo --> ", userInfo);
   }
 
   return {

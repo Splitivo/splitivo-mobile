@@ -48,6 +48,7 @@ module.exports = {
     plugins: [
       "expo-router",
       "expo-font",
+      "expo-apple-authentication",
       [
         "expo-camera",
         {

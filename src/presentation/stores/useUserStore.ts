@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { User, BankAccount } from "../../domain/entities/user";
 import { UserRepositoryImpl } from "../../data/repositories/UserRepositoryImpl";
 
-const userRepo = new UserRepositoryImpl();
+const userRepo = UserRepositoryImpl;
 
 interface UserState {
   user: User | null;

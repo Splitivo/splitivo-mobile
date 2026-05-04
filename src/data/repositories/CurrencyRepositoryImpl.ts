@@ -1,10 +1,11 @@
 import { CurrencyRepository } from "../../domain/repositories/CurrencyRepository";
 import { Currency } from "../../domain/entities/currency";
 import { CurrencyLocalDatasource } from "../datasources/local/CurrencyLocalDatasource";
+import { withRepoLogging } from "../utils/withRepoLogging";
 
 const datasource = new CurrencyLocalDatasource();
 
-export class CurrencyRepositoryImpl implements CurrencyRepository {
+class CurrencyRepositoryBase implements CurrencyRepository {
   async getAll(): Promise<Currency[]> {
     return datasource.getAll();
   }
@@ -17,3 +18,8 @@ export class CurrencyRepositoryImpl implements CurrencyRepository {
     return datasource.search(query);
   }
 }
+
+export const CurrencyRepositoryImpl = withRepoLogging(
+  "CurrencyRepositoryImpl",
+  new CurrencyRepositoryBase(),
+);

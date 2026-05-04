@@ -1,10 +1,11 @@
 import { ScanRepository } from "../../domain/repositories/ScanRepository";
 import { ScanResult } from "../../domain/entities/scan";
 import { MockScanDatasource } from "../datasources/mock/MockScanDatasource";
+import { withRepoLogging } from "../utils/withRepoLogging";
 
 const datasource = new MockScanDatasource();
 
-export class ScanRepositoryImpl implements ScanRepository {
+class ScanRepositoryBase implements ScanRepository {
   async scanReceipt(
     imageBase64: string,
     currency: string,
@@ -12,3 +13,8 @@ export class ScanRepositoryImpl implements ScanRepository {
     return datasource.scanReceipt(imageBase64, currency);
   }
 }
+
+export const ScanRepositoryImpl = withRepoLogging(
+  "ScanRepositoryImpl",
+  new ScanRepositoryBase(),
+);

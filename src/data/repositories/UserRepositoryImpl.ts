@@ -1,10 +1,11 @@
 import { UserRepository } from "../../domain/repositories/UserRepository";
 import { User, Participant } from "../../domain/entities/user";
 import { MockUserDatasource } from "../datasources/mock/MockUserDatasource";
+import { withRepoLogging } from "../utils/withRepoLogging";
 
 const datasource = new MockUserDatasource();
 
-export class UserRepositoryImpl implements UserRepository {
+class UserRepositoryBase implements UserRepository {
   async getCurrentUser(): Promise<User> {
     return datasource.getCurrentUser();
   }
@@ -17,3 +18,8 @@ export class UserRepositoryImpl implements UserRepository {
     return datasource.searchParticipants(query);
   }
 }
+
+export const UserRepositoryImpl = withRepoLogging(
+  "UserRepositoryImpl",
+  new UserRepositoryBase(),
+);

@@ -6,7 +6,7 @@ import {
 } from "../../domain/entities/expense";
 import { ExpenseRepositoryImpl } from "../../data/repositories/ExpenseRepositoryImpl";
 
-const expenseRepo = new ExpenseRepositoryImpl();
+const expenseRepo = ExpenseRepositoryImpl;
 
 interface ExpenseState {
   expenses: Expense[];

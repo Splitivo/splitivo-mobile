@@ -1,10 +1,11 @@
 import { BillRepository } from "../../domain/repositories/BillRepository";
 import { Bill, PersonBreakdown } from "../../domain/entities/bill";
 import { MockBillDatasource } from "../datasources/mock/MockBillDatasource";
+import { withRepoLogging } from "../utils/withRepoLogging";
 
 const datasource = new MockBillDatasource();
 
-export class BillRepositoryImpl implements BillRepository {
+class BillRepositoryBase implements BillRepository {
   async getBills(): Promise<Bill[]> {
     return datasource.getBills();
   }
@@ -33,3 +34,8 @@ export class BillRepositoryImpl implements BillRepository {
     return datasource.finalizeBill(billId);
   }
 }
+
+export const BillRepositoryImpl = withRepoLogging(
+  "BillRepositoryImpl",
+  new BillRepositoryBase(),
+);

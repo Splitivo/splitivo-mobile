@@ -5,10 +5,11 @@ import {
   TimePeriod,
 } from "../../domain/entities/expense";
 import { MockExpenseDatasource } from "../datasources/mock/MockExpenseDatasource";
+import { withRepoLogging } from "../utils/withRepoLogging";
 
 const datasource = new MockExpenseDatasource();
 
-export class ExpenseRepositoryImpl implements ExpenseRepository {
+class ExpenseRepositoryBase implements ExpenseRepository {
   async getExpenses(): Promise<Expense[]> {
     return datasource.getExpenses();
   }
@@ -21,3 +22,8 @@ export class ExpenseRepositoryImpl implements ExpenseRepository {
     return datasource.getCategoryBreakdown(period);
   }
 }
+
+export const ExpenseRepositoryImpl = withRepoLogging(
+  "ExpenseRepositoryImpl",
+  new ExpenseRepositoryBase(),
+);

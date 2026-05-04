@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Currency } from "../../domain/entities/currency";
 import { CurrencyRepositoryImpl } from "../../data/repositories/CurrencyRepositoryImpl";
 
-const currencyRepo = new CurrencyRepositoryImpl();
+const currencyRepo = CurrencyRepositoryImpl;
 
 interface CurrencyState {
   currencies: Currency[];

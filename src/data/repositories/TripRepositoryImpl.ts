@@ -1,10 +1,11 @@
 import { TripRepository } from "../../domain/repositories/TripRepository";
 import { Trip, TransferOptimizationResult } from "../../domain/entities/trip";
 import { MockTripDatasource } from "../datasources/mock/MockTripDatasource";
+import { withRepoLogging } from "../utils/withRepoLogging";
 
 const datasource = new MockTripDatasource();
 
-export class TripRepositoryImpl implements TripRepository {
+class TripRepositoryBase implements TripRepository {
   async getTrips(): Promise<Trip[]> {
     return datasource.getTrips();
   }
@@ -33,3 +34,8 @@ export class TripRepositoryImpl implements TripRepository {
     return datasource.finalizeTrip(tripId);
   }
 }
+
+export const TripRepositoryImpl = withRepoLogging(
+  "TripRepositoryImpl",
+  new TripRepositoryBase(),
+);

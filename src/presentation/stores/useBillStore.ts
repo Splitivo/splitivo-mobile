@@ -3,7 +3,7 @@ import { Bill, BillItem, PersonBreakdown } from "../../domain/entities/bill";
 import { Participant } from "../../domain/entities/user";
 import { BillRepositoryImpl } from "../../data/repositories/BillRepositoryImpl";
 
-const billRepo = new BillRepositoryImpl();
+const billRepo = BillRepositoryImpl;
 
 interface BillState {
   bills: Bill[];
