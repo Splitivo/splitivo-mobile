@@ -8,7 +8,7 @@
     "start:smoke": "dotenv -e .env.smoke -- expo start",
     "start:prod": "dotenv -e .env.prod -- expo start",
     "ios": "expo run:ios",
-    "ios:dev": "dotenv -e .env.dev -- expo run:ios --device",
+    "ios:dev": "dotenv -e .env.dev -- expo run:ios --device --configuration Release",
     "ios:smoke": "dotenv -e .env.smoke -- expo run:ios --device",
     "ios:prod": "dotenv -e .env.prod -- expo run:ios --device",
     "android": "expo run:android",

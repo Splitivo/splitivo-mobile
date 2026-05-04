@@ -1,14 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Stack, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
+import * as ExpoSplashScreen from "expo-splash-screen";
 import { ThemeProvider, useTheme } from "../src/core/theme";
 import { useLiquidGlass } from "../src/hooks/useLiquidGlass";
 import { useUIStore } from "../src/presentation/stores/useUIStore";
 import { useAuthStore } from "../src/presentation/stores/useAuthStore";
 import { FloatingDebugButton } from "../src/presentation/components/FloatingDebugButton";
+import { SplashScreen } from "../src/presentation/components/SplashScreen";
 import {
   useFonts,
   Geist_400Regular,
@@ -19,6 +21,8 @@ import {
 } from "@expo-google-fonts/geist";
 import { Toaster } from "sonner-native";
 import "../global.css";
+
+ExpoSplashScreen.preventAutoHideAsync();
 
 const DARK_GRADIENT = ["#141414", "#0A0A0A", "#000000"] as const;
 const LIGHT_GRADIENT = ["#FFFFFF", "#F5F5F5", "#EBEBEB"] as const;
@@ -158,12 +162,26 @@ export default function RootLayout() {
     Geist_700Bold,
     Geist_800ExtraBold,
   });
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      ExpoSplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  const handleSplashComplete = useCallback(() => {
+    setShowSplash(false);
+  }, []);
 
   if (!fontsLoaded) return null;
 
   return (
     <ThemeProvider>
       <RootLayoutInner />
+      {showSplash && (
+        <SplashScreen onAnimationComplete={handleSplashComplete} />
+      )}
     </ThemeProvider>
   );
 }
