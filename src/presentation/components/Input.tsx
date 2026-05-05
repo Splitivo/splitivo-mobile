@@ -13,15 +13,18 @@ export enum ValidationRule {
   Email = "email",
   Phone = "phone",
   CharLimit = "charLimit",
+  MinChar = "minChar",
 }
 
 function validate(
   value: string,
   rule: ValidationRule,
   charLimit?: number,
+  minChar?: number,
 ): string | null {
   if (!value) {
     if (rule === ValidationRule.Required) return "This field is required.";
+    if (rule === ValidationRule.MinChar) return `Min ${minChar} characters.`;
     return null; // empty is fine for non-Required rules
   }
   switch (rule) {
@@ -37,6 +40,10 @@ function validate(
       return charLimit !== undefined && value.length > charLimit
         ? `Max ${charLimit} characters.`
         : null;
+    case ValidationRule.MinChar:
+      return minChar !== undefined && value.length < minChar
+        ? `Min ${minChar} characters.`
+        : null;
     default:
       return null;
   }
@@ -49,6 +56,8 @@ interface InputProps extends TextInputProps {
   validationType?: ValidationRule;
   /** Max characters — only used when validationType is CharLimit. */
   charLimit?: number;
+  /** Min characters — only used when validationType is MinChar. */
+  minChar?: number;
   /** Called with `true` when value passes validation, `false` otherwise. */
   onValidChange?: (isValid: boolean) => void;
   /** Hides the context menu (Copy, Paste, Cut, Select) entirely. */
@@ -61,6 +70,7 @@ export function Input({
   style,
   validationType,
   charLimit,
+  minChar,
   onValidChange,
   disableActions,
   value,
@@ -71,7 +81,7 @@ export function Input({
 
   const validationError =
     validationType !== undefined && value !== undefined
-      ? validate(String(value), validationType, charLimit)
+      ? validate(String(value), validationType, charLimit, minChar)
       : null;
 
   const displayError =
@@ -84,10 +94,10 @@ export function Input({
     if (validationType === undefined || onValidChange === undefined) return;
     const err =
       value !== undefined
-        ? validate(String(value), validationType, charLimit)
+        ? validate(String(value), validationType, charLimit, minChar)
         : null;
     onValidChange(err === null);
-  }, [value, validationType, charLimit]);
+  }, [value, validationType, charLimit, minChar]);
 
   return (
     <View style={styles.container}>

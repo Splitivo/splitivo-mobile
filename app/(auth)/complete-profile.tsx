@@ -20,7 +20,7 @@ export default function CompleteProfileScreen() {
   const [phone, setPhone] = useState(session?.user.phone ?? "");
   const [loading, setLoading] = useState(false);
   const [usernameValid, setUsernameValid] = useState(
-    (session?.user.username ?? "").length > 0,
+    (session?.user.username ?? "").length >= 8,
   );
   const [phoneValid, setPhoneValid] = useState(true);
 
@@ -55,12 +55,13 @@ export default function CompleteProfileScreen() {
         <GlassCard style={styles.card}>
           <Input
             label="Username"
-            placeholder="e.g. haikalfadil"
+            placeholder="e.g. astronaut42"
             value={username}
             onChangeText={setUsername}
             autoCapitalize="none"
             autoCorrect={false}
-            validationType={ValidationRule.Required}
+            validationType={ValidationRule.MinChar}
+            minChar={8}
             onValidChange={setUsernameValid}
           />
           <View style={styles.spacer} />
