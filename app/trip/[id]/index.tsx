@@ -231,7 +231,7 @@ export default function TripDetailScreen() {
         variant="ghost"
         onPress={() => {}}
         fullWidth
-        style={{ marginTop: 8, marginBottom: 32 }}
+        style={{ marginTop: 8 }}
       />
     </ScreenContainer>
   );

@@ -58,7 +58,11 @@ export default function ActivityScreen() {
   );
 
   return (
-    <ScreenContainer title="Activity" subtitle="All your splits in one place">
+    <ScreenContainer
+      title="Activity"
+      subtitle="All your splits in one place"
+      hasTabBar
+    >
       {/* Filter chips — scrollable, rounded-full */}
       <FilterChips filter={filter} onSelect={setFilter} colors={colors} />
 
@@ -134,7 +138,7 @@ function BillCard({ bill, colors }: { bill: Bill; colors: Colors }) {
       onPress={() =>
         bill.tripId
           ? router.push(`/trip/${bill.tripId}`)
-          : router.push(`/split/result?billId=${bill.id}`)
+          : router.push(`/split/bill-detail?billId=${bill.id}`)
       }
       style={({ pressed }) => [
         styles.billCard,

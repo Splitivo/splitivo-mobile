@@ -16,7 +16,10 @@ function log(level: LogLevel, tag: string | undefined, messages: unknown[]) {
           ? console.info
           : console.log;
 
-  consoleFn(prefix, ...messages);
+  const formatted = messages.map((m) =>
+    m !== null && typeof m === "object" ? JSON.stringify(m, null, 2) : m,
+  );
+  consoleFn(prefix, ...formatted);
 
   // Store in the sheet only for dev/smoke
   if (appConfig.env === Environment.Prod) return;

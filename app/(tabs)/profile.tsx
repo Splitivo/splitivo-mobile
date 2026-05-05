@@ -107,7 +107,7 @@ export default function ProfileScreen() {
   }, []);
 
   return (
-    <ScreenContainer title="Profile">
+    <ScreenContainer title="Profile" hasTabBar>
       {/* User card */}
       <UserCard user={user} isLoading={isLoading} colors={colors} />
 

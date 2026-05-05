@@ -52,7 +52,11 @@ export default function ExpensesScreen() {
   const total = categoryBreakdown.reduce((sum, c) => sum + c.amount, 0);
 
   return (
-    <ScreenContainer title="Expenses" subtitle="Where your money goes">
+    <ScreenContainer
+      title="Expenses"
+      subtitle="Where your money goes"
+      hasTabBar
+    >
       {/* Period Filter */}
       <SegmentedControl
         options={PERIODS}

@@ -54,6 +54,8 @@ interface ScreenContainerProps {
   refreshable?: boolean;
   /** Called when the user pulls to refresh. Must resolve/complete to hide the indicator. */
   onRefresh?: () => Promise<void>;
+  /** Set to true on tab bar screens so extra bottom padding clears the tab bar. */
+  hasTabBar?: boolean;
 }
 
 /**
@@ -75,6 +77,7 @@ export function ScreenContainer({
   navBarTitle,
   refreshable = false,
   onRefresh,
+  hasTabBar = false,
 }: ScreenContainerProps) {
   const insets = useSafeAreaInsets();
   const { resolvedMode, colors } = useTheme();
@@ -271,7 +274,7 @@ export function ScreenContainer({
 
             {children}
 
-            <View style={{ height: 120 }} />
+            {hasTabBar ? <View style={{ height: 120 }} /> : null}
           </Animated.ScrollView>
 
           {/* Compact nav bar */}
@@ -360,7 +363,7 @@ const styles = StyleSheet.create({
   content: { flex: 1 },
 
   // Large title (scrolls with content)
-  largeHeader: { marginBottom: 20 },
+  largeHeader: { marginBottom: 8 },
   largeTitle: {
     fontSize: 28,
     fontWeight: "700",
@@ -411,7 +414,7 @@ const styles = StyleSheet.create({
   navBarTrailing: { position: "absolute", right: 16 },
   refreshSpinnerWrap: {
     alignItems: "center",
-    paddingVertical: 10,
+    paddingVertical: 2,
     marginBottom: 20,
   },
 });
