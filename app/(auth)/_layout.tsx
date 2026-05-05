@@ -14,6 +14,10 @@ export default function AuthLayout() {
       }}
     >
       <Stack.Screen name="sign-in" />
+      <Stack.Screen
+        name="complete-profile"
+        options={{ gestureEnabled: false }}
+      />
     </Stack>
   );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   TextInput as RNTextInput,
@@ -8,13 +8,86 @@ import {
 } from "react-native";
 import { useTheme } from "../../core/theme";
 
+export enum ValidationRule {
+  Required = "required",
+  Email = "email",
+  Phone = "phone",
+  CharLimit = "charLimit",
+}
+
+function validate(
+  value: string,
+  rule: ValidationRule,
+  charLimit?: number,
+): string | null {
+  if (!value) {
+    if (rule === ValidationRule.Required) return "This field is required.";
+    return null; // empty is fine for non-Required rules
+  }
+  switch (rule) {
+    case ValidationRule.Email:
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+        ? null
+        : "Enter a valid email address.";
+    case ValidationRule.Phone:
+      return /^\+?[\d\s\-().]{7,20}$/.test(value)
+        ? null
+        : "Enter a valid phone number.";
+    case ValidationRule.CharLimit:
+      return charLimit !== undefined && value.length > charLimit
+        ? `Max ${charLimit} characters.`
+        : null;
+    default:
+      return null;
+  }
+}
+
 interface InputProps extends TextInputProps {
   label?: string;
   error?: string;
+  /** Validation rule to apply on the current value. */
+  validationType?: ValidationRule;
+  /** Max characters — only used when validationType is CharLimit. */
+  charLimit?: number;
+  /** Called with `true` when value passes validation, `false` otherwise. */
+  onValidChange?: (isValid: boolean) => void;
+  /** Hides the context menu (Copy, Paste, Cut, Select) entirely. */
+  disableActions?: boolean;
 }
 
-export function Input({ label, error, style, ...props }: InputProps) {
+export function Input({
+  label,
+  error,
+  style,
+  validationType,
+  charLimit,
+  onValidChange,
+  disableActions,
+  value,
+  onChangeText,
+  ...props
+}: InputProps) {
   const { colors } = useTheme();
+
+  const validationError =
+    validationType !== undefined && value !== undefined
+      ? validate(String(value), validationType, charLimit)
+      : null;
+
+  const displayError =
+    error ??
+    (value !== undefined && value !== ""
+      ? (validationError ?? undefined)
+      : undefined);
+
+  useEffect(() => {
+    if (validationType === undefined || onValidChange === undefined) return;
+    const err =
+      value !== undefined
+        ? validate(String(value), validationType, charLimit)
+        : null;
+    onValidChange(err === null);
+  }, [value, validationType, charLimit]);
 
   return (
     <View style={styles.container}>
@@ -24,21 +97,28 @@ export function Input({ label, error, style, ...props }: InputProps) {
         </Text>
       )}
       <RNTextInput
+        value={value}
+        onChangeText={onChangeText}
         style={[
           styles.input,
           {
             backgroundColor: colors.bg.input,
             color: colors.text.primary,
-            borderColor: error ? colors.status.error : colors.border.default,
+            borderColor: displayError
+              ? colors.status.error
+              : colors.border.default,
           },
           style,
         ]}
         placeholderTextColor={colors.text.tertiary}
+        cursorColor={colors.accent.primary}
+        selectionColor={colors.accent.primary}
+        contextMenuHidden={!!disableActions}
         {...props}
       />
-      {error && (
+      {displayError && (
         <Text style={[styles.error, { color: colors.status.error }]}>
-          {error}
+          {displayError}
         </Text>
       )}
     </View>

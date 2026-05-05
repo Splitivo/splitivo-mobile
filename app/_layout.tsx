@@ -41,7 +41,11 @@ function RootLayoutInner() {
 
   useEffect(() => {
     if (session) {
-      router.replace("/(tabs)");
+      if (session.requiresProfileCompletion) {
+        router.replace("/(auth)/complete-profile");
+      } else {
+        router.replace("/(tabs)");
+      }
     } else {
       router.replace("/(auth)/sign-in");
     }

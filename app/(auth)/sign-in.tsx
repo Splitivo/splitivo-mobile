@@ -66,7 +66,11 @@ export default function WelcomeScreen() {
             : "Sign in failed. Please try again.",
         );
       } else if (session) {
-        router.replace("/(tabs)");
+        if (session.requiresProfileCompletion) {
+          router.replace("/(auth)/complete-profile");
+        } else {
+          router.replace("/(tabs)");
+        }
       }
     } catch (e) {
       Logger.tag("SIGN IN").error(`${provider} sign in error`, e);
