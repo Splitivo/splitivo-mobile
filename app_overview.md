@@ -324,7 +324,7 @@ Minimal store for `themeMode: ThemeMode`. Main theme persistence lives in `Theme
 
 | Screen           | Description                                                                                                   |
 | ---------------- | ------------------------------------------------------------------------------------------------------------- |
-| `welcome.tsx`    | Landing: "Splitivo" logo, tagline, Google/Apple/Email sign-in buttons (all mock).                            |
+| `welcome.tsx`    | Landing: "Splitivo" logo, tagline, Google/Apple/Email sign-in buttons (all mock).                             |
 | `sign-in.tsx`    | Email/phone toggle, password input in `GlassCard`. Mock sign-in navigates to tabs.                            |
 | `sign-up.tsx`    | Username, email, password fields. Navigates to OTP verification.                                              |
 | `verify-otp.tsx` | 6-box OTP input with auto-advance on digit entry and backspace-to-previous logic. Auto-submits on completion. |
@@ -429,9 +429,9 @@ Custom tokens in `tailwind.config.js`:
 
 | Property         | Value                  |
 | ---------------- | ---------------------- |
-| App Name         | `Splitivo`            |
-| Bundle ID        | `com.splitivo.mobile` |
-| URL Scheme       | `splitivo`            |
+| App Name         | `Splitivo`             |
+| Bundle ID        | `com.splitivo.mobile`  |
+| URL Scheme       | `splitivo`             |
 | New Architecture | Enabled                |
 | Orientation      | Portrait               |
 | Theme            | Automatic (light/dark) |
@@ -441,11 +441,11 @@ Custom tokens in `tailwind.config.js`:
 
 Three environments driven by `EXPO_PUBLIC_*` env vars:
 
-| Variable                    | Description                  |
-| --------------------------- | ---------------------------- |
-| `EXPO_PUBLIC_ENV`           | `"dev" \| "smoke" \| "prod"` |
-| `EXPO_PUBLIC_API_URL`       | Backend API base URL         |
-| `EXPO_PUBLIC_DEBUG_ENABLED` | Enables debug panel          |
+| Variable          | Description                  |
+| ----------------- | ---------------------------- |
+| `EXPO_PUBLIC_ENV` | `"dev" \| "smoke" \| "prod"` |
+| `API_URL`         | Backend API base URL         |
+| `DEBUG_ENABLED`   | Enables debug panel          |
 
 Started via `dotenv-cli` with env-specific `.env` files:
 

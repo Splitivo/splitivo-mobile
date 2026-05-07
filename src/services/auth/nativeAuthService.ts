@@ -22,7 +22,7 @@ function ensureGoogleConfigured() {
   const { GoogleSignin } = getGoogleSignin();
   GoogleSignin.configure({
     iosClientId:
-      process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID_IOS ??
+      process.env.GOOGLE_CLIENT_ID_IOS ??
       "101209994670-9t9qc1onn47n9j52g83o9qik77ur3d12.apps.googleusercontent.com",
   });
   googleConfigured = true;

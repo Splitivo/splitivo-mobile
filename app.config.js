@@ -60,6 +60,11 @@ module.exports = {
       favicon: icon,
       bundler: "metro",
     },
+    extra: {
+      eas: {
+        projectId: "ebd189ab-ef66-4efc-a959-eed3305526bc",
+      },
+    },
     plugins: [
       "expo-router",
       "expo-font",

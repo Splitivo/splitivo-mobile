@@ -24,11 +24,11 @@ export interface AppConfig {
 }
 
 export const getAppConfig = (): AppConfig => {
-  const env = (process.env.EXPO_PUBLIC_ENV as Environment) || Environment.Dev;
+  const env = (process.env.APP_ENV as Environment) || Environment.Dev;
   return {
-    apiUrl: process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000/api",
+    apiUrl: process.env.API_URL || "http://localhost:3000/api",
     env,
-    debugEnabled: process.env.EXPO_PUBLIC_DEBUG_ENABLED === "true",
+    debugEnabled: process.env.DEBUG_ENABLED === "true",
   };
 };
 
