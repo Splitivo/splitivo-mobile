@@ -5,25 +5,91 @@
   "build": {
     "development": {
       "env": {
-        "APP_ENV": "dev"
+        "APP_ENV": "dev",
+        "EXPO_PUBLIC_API_URL": "https://splitivo-dev-server-101209994670.asia-southeast2.run.app",
+        "EXPO_PUBLIC_ENV": "dev",
+        "EXPO_PUBLIC_DEBUG_ENABLED": "true",
+        "EXPO_PUBLIC_GOOGLE_CLIENT_ID_IOS": "101209994670-9t9qc1onn47n9j52g83o9qik77ur3d12.apps.googleusercontent.com"
       },
       "developmentClient": true,
       "distribution": "internal"
     },
     "preview": {
       "env": {
-        "APP_ENV": "smoke"
+        "APP_ENV": "smoke",
+        "EXPO_PUBLIC_API_URL": "https://splitivo-dev-server-101209994670.asia-southeast2.run.app",
+        "EXPO_PUBLIC_ENV": "smoke",
+        "EXPO_PUBLIC_DEBUG_ENABLED": "true",
+        "EXPO_PUBLIC_GOOGLE_CLIENT_ID_IOS": "101209994670-9t9qc1onn47n9j52g83o9qik77ur3d12.apps.googleusercontent.com"
       },
       "distribution": "internal"
     },
+    "staging": {
+      "env": {
+        "APP_ENV": "dev",
+        "EXPO_PUBLIC_API_URL": "https://splitivo-dev-server-101209994670.asia-southeast2.run.app",
+        "EXPO_PUBLIC_ENV": "dev",
+        "EXPO_PUBLIC_DEBUG_ENABLED": "true",
+        "EXPO_PUBLIC_GOOGLE_CLIENT_ID_IOS": "101209994670-9t9qc1onn47n9j52g83o9qik77ur3d12.apps.googleusercontent.com"
+      },
+      "distribution": "store"
+    },
     "production": {
       "env": {
-        "APP_ENV": "prod"
+        "APP_ENV": "prod",
+        "EXPO_PUBLIC_API_URL": "https://splitivo-server-101209994670.asia-southeast2.run.app",
+        "EXPO_PUBLIC_ENV": "prod",
+        "EXPO_PUBLIC_DEBUG_ENABLED": "false",
+        "EXPO_PUBLIC_GOOGLE_CLIENT_ID_IOS": "101209994670-9t9qc1onn47n9j52g83o9qik77ur3d12.apps.googleusercontent.com"
       },
       "distribution": "store"
     }
   },
   "submit": {
-    "production": {}
+    "staging": {
+      "ios": {
+        "appleId": "",
+        "ascAppId": "",
+        "appleTeamId": ""
+      }
+    },
+    "preview": {
+      "ios": {
+        "appleId": "",
+        "ascAppId": "",
+        "appleTeamId": ""
+      }
+    },
+    "production": {
+      "ios": {
+        "appleId": "",
+        "ascAppId": "",
+        "appleTeamId": ""
+      }
+    }
+  }
+}
+  "submit": {
+    "staging": {
+      "ios": {
+        "appleId": "",
+        "ascAppId": "",
+        "appleTeamId": ""
+      }
+    },
+    "preview": {
+      "ios": {
+        "appleId": "",
+        "ascAppId": "",
+        "appleTeamId": ""
+      }
+    },
+    "production": {
+      "ios": {
+        "appleId": "",
+        "ascAppId": "",
+        "appleTeamId": ""
+      }
+    }
   }
 }
