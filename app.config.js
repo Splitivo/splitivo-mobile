@@ -2,6 +2,13 @@ const APP_ENV = process.env.APP_ENV ?? "prod";
 const IS_DEV = APP_ENV === "dev";
 const IS_SMOKE = APP_ENV === "smoke";
 
+const apiUrl =
+  process.env.API_URL ||
+  (IS_DEV || IS_SMOKE
+    ? "https://splitivo-dev-server-101209994670.asia-southeast2.run.app"
+    : "https://api.splitivo.com");
+const debugEnabled = process.env.DEBUG_ENABLED === "true";
+
 const appName = IS_DEV
   ? "Splitivo Dev"
   : IS_SMOKE
@@ -37,7 +44,7 @@ module.exports = {
     splash: {
       image: "./assets/splash-icon.png",
       resizeMode: "contain",
-      backgroundColor: "#09090B",
+      backgroundColor: "#0d0d0f",
     },
     ios: {
       supportsTablet: true,
@@ -50,7 +57,7 @@ module.exports = {
     android: {
       adaptiveIcon: {
         foregroundImage: icon,
-        backgroundColor: "#09090B",
+        backgroundColor: "#0d0d0f",
       },
       edgeToEdgeEnabled: true,
       package: androidPackage,
@@ -64,6 +71,9 @@ module.exports = {
       eas: {
         projectId: "ebd189ab-ef66-4efc-a959-eed3305526bc",
       },
+      apiUrl,
+      debugEnabled,
+      appEnv: APP_ENV,
     },
     plugins: [
       "expo-router",

@@ -1,3 +1,5 @@
+import Constants from "expo-constants";
+
 export enum Environment {
   Dev = "dev",
   Smoke = "smoke",
@@ -24,11 +26,12 @@ export interface AppConfig {
 }
 
 export const getAppConfig = (): AppConfig => {
-  const env = (process.env.APP_ENV as Environment) || Environment.Dev;
+  const extra = Constants.expoConfig?.extra || {};
+  const env = (extra.appEnv as Environment) || Environment.Dev;
   return {
-    apiUrl: process.env.API_URL || "http://localhost:3000/api",
+    apiUrl: extra.apiUrl || "http://localhost:3000/api",
     env,
-    debugEnabled: process.env.DEBUG_ENABLED === "true",
+    debugEnabled: extra.debugEnabled === true,
   };
 };
 

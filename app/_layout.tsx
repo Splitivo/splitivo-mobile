@@ -169,6 +169,7 @@ export default function RootLayout() {
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
+    // Expo splash auto-hides immediately, show custom splash
     if (fontsLoaded) {
       ExpoSplashScreen.hideAsync();
     }
