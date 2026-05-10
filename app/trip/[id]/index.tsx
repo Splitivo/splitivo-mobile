@@ -137,23 +137,30 @@ export default function TripDetailScreen() {
       )}
 
       {trip.bills.map((bill) => (
-        <GlassCard key={bill.id} style={styles.billCard}>
-          <View style={styles.billRow}>
-            <View style={{ flex: 1 }}>
+        <Pressable
+          key={bill.id}
+          onPress={() => router.push(`/split/${bill.id}` as any)}
+        >
+          <GlassCard style={styles.billCard}>
+            <View style={styles.billRow}>
+              <View style={{ flex: 1 }}>
+                <Text
+                  style={[styles.billMerchant, { color: colors.text.primary }]}
+                >
+                  {bill.merchantName}
+                </Text>
+                <Text style={{ color: colors.text.secondary, fontSize: 12 }}>
+                  {formatDate(bill.date)} · {bill.items.length} items
+                </Text>
+              </View>
               <Text
-                style={[styles.billMerchant, { color: colors.text.primary }]}
+                style={[styles.billAmount, { color: colors.accent.primary }]}
               >
-                {bill.merchantName}
-              </Text>
-              <Text style={{ color: colors.text.secondary, fontSize: 12 }}>
-                {formatDate(bill.date)} · {bill.items.length} items
+                {formatCurrency(bill.totalAmount, bill.currency)}
               </Text>
             </View>
-            <Text style={[styles.billAmount, { color: colors.accent.primary }]}>
-              {formatCurrency(bill.totalAmount, bill.currency)}
-            </Text>
-          </View>
-        </GlassCard>
+          </GlassCard>
+        </Pressable>
       ))}
 
       {/* Optimized Transfers */}

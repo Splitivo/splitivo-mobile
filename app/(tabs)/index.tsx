@@ -424,7 +424,7 @@ function BillRow({ bill, colors }: { bill: Bill; colors: Colors }) {
   const meta = catKey && CATEGORY_META[catKey];
   return (
     <Pressable
-      onPress={() => router.push(`/split/bill-detail?billId=${bill.id}`)}
+      onPress={() => router.push(`/split/${bill.id}`)}
       style={({ pressed }) => [
         styles.billRow,
         {

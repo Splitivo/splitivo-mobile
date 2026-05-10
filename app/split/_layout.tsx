@@ -17,6 +17,7 @@ export default function SplitLayout() {
       <Stack.Screen name="manual-entry" />
       <Stack.Screen name="confirm" />
       <Stack.Screen name="result" />
+      <Stack.Screen name="[id]" />
     </Stack>
   );
 }

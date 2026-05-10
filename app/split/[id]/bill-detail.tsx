@@ -1,41 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { Text } from "../../src/presentation/components/Text";
-import { ScreenContainer } from "../../src/presentation/components/ScreenContainer";
+import { Text } from "../../../src/presentation/components/Text";
+import { ScreenContainer } from "../../../src/presentation/components/ScreenContainer";
 import { router, useLocalSearchParams } from "expo-router";
-import { useTheme } from "../../src/core/theme";
-import { useBillStore } from "../../src/presentation/stores/useBillStore";
-import { GlassCard } from "../../src/presentation/components/GlassCard";
-import { Button } from "../../src/presentation/components/Button";
-import { Avatar } from "../../src/presentation/components/Avatar";
-import { StatusPill } from "../../src/presentation/components/StatusPill";
+import { useTheme } from "../../../src/core/theme";
+import { useBillStore } from "../../../src/presentation/stores/useBillStore";
+import { GlassCard } from "../../../src/presentation/components/GlassCard";
+import { Button } from "../../../src/presentation/components/Button";
+import { Avatar } from "../../../src/presentation/components/Avatar";
+import { StatusPill } from "../../../src/presentation/components/StatusPill";
 import {
   Skeleton,
   CardSkeleton,
-} from "../../src/presentation/components/Skeleton";
-import type { Bill, PersonBreakdown } from "../../src/domain/entities/bill";
-import { formatCurrency, formatDate } from "../../src/data/utils/currency";
+} from "../../../src/presentation/components/Skeleton";
+import type { Bill, PersonBreakdown } from "../../../src/domain/entities/bill";
+import { formatCurrency, formatDate } from "../../../src/data/utils/currency";
 
 export default function ResultScreen() {
   const { colors } = useTheme();
-  const { billId } = useLocalSearchParams<{ billId: string }>();
+  const { id } = useLocalSearchParams<{ id: string }>();
   const { bills, fetchBills, fetchBreakdown, breakdown, settlePerson } =
     useBillStore();
   const [loading, setLoading] = useState(true);
 
-  const bill = bills.find((b) => b.id === billId);
+  const bill = bills.find((b) => b.id === id);
 
   useEffect(() => {
     const load = async () => {
       setLoading(true);
       await fetchBills();
-      if (billId) {
-        await fetchBreakdown(billId);
+      if (id) {
+        await fetchBreakdown(id);
       }
       setLoading(false);
     };
     load();
-  }, [billId]);
+  }, [id]);
 
   if (loading) {
     return (
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   date: { fontSize: 13 },
-  totalCard: { alignItems: "center", marginBottom: 20 },
+  totalCard: { alignItems: "flex-start", marginBottom: 20 },
   totalLabel: { fontSize: 14 },
   totalValue: { fontSize: 32, fontWeight: "800", marginTop: 4 },
   totalMeta: { marginTop: 8 },

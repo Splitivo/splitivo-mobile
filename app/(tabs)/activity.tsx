@@ -138,7 +138,7 @@ function BillCard({ bill, colors }: { bill: Bill; colors: Colors }) {
       onPress={() =>
         bill.tripId
           ? router.push(`/trip/${bill.tripId}`)
-          : router.push(`/split/bill-detail?billId=${bill.id}`)
+          : router.push(`/split/${bill.id}`)
       }
       style={({ pressed }) => [
         styles.billCard,

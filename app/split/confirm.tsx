@@ -67,7 +67,7 @@ export default function ConfirmScreen() {
 
   const handleConfirm = async () => {
     const bill = await useBillStore.getState().createBill();
-    router.replace(`/split/bill-detail?billId=${bill.id}`);
+    router.replace(`/split/${bill.id}`);
   };
 
   return (
