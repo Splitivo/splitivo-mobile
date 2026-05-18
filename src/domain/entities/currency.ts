@@ -1,9 +1,11 @@
 export interface Currency {
-  code: string;
+  id: number;
+  uid: string;
   name: string;
-  namePlural: string;
+  code: string;
   symbol: string;
-  symbolNative: string;
-  decimalDigits: number;
-  rounding: number;
+  decimal_precision: number;
+  exchange_rate_to_usd: number;
+  is_active: boolean;
+  updated_at: string;
 }
