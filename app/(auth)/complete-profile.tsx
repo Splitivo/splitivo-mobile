@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Pressable, View, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Text } from "../../src/presentation/components/Text";
 import { ScreenContainer } from "../../src/presentation/components/ScreenContainer";
@@ -9,7 +9,9 @@ import { GlassCard } from "../../src/presentation/components/GlassCard";
 import { router } from "expo-router";
 import { useTheme } from "../../src/core/theme";
 import { useAuthStore } from "../../src/presentation/stores/useAuthStore";
+import { useCurrencyStore } from "../../src/presentation/stores/useCurrencyStore";
 import { toast } from "sonner-native";
+import { ChevronRight, Globe } from "lucide-react-native";
 
 export default function CompleteProfileScreen() {
   const { colors } = useTheme();
@@ -18,6 +20,12 @@ export default function CompleteProfileScreen() {
 
   const [username, setUsername] = useState(session?.user.username ?? "");
   const [phone, setPhone] = useState(session?.user.phone ?? "");
+  const { selectedCurrency, fetchCurrencies } = useCurrencyStore();
+
+  useEffect(() => {
+    fetchCurrencies();
+  }, []);
+
   const [loading, setLoading] = useState(false);
   const [usernameValid, setUsernameValid] = useState(
     (session?.user.username ?? "").length >= 8,
@@ -74,6 +82,49 @@ export default function CompleteProfileScreen() {
             validationType={ValidationRule.Phone}
             onValidChange={setPhoneValid}
           />
+          <View style={styles.currencyContainer}>
+            <Text style={[styles.fieldLabel, { color: colors.text.secondary }]}>
+              Base Currency
+            </Text>
+            <Pressable
+              onPress={() => router.push("/currency-selection-sheet")}
+              style={({ pressed }) => [
+                styles.currencyRow,
+                {
+                  backgroundColor: colors.bg.input,
+                  borderColor: colors.border.default,
+                  opacity: pressed ? 0.7 : 1,
+                },
+              ]}
+            >
+              <Globe size={16} color={colors.accent.primary} />
+              <Text
+                style={[
+                  styles.currencyLabel,
+                  {
+                    color: selectedCurrency
+                      ? colors.text.primary
+                      : colors.text.tertiary,
+                  },
+                ]}
+              >
+                {selectedCurrency
+                  ? `${selectedCurrency.code} — ${selectedCurrency.name}`
+                  : "Select currency"}
+              </Text>
+              {selectedCurrency && (
+                <Text
+                  style={[
+                    styles.currencySymbol,
+                    { color: colors.accent.primary },
+                  ]}
+                >
+                  {selectedCurrency.symbol}
+                </Text>
+              )}
+              <ChevronRight size={16} color={colors.text.tertiary} />
+            </Pressable>
+          </View>
         </GlassCard>
       </ScreenContainer>
 
@@ -111,6 +162,36 @@ const styles = StyleSheet.create({
   },
   spacer: {
     height: 12,
+  },
+  currencyContainer: {
+    marginBottom: 16,
+  },
+  fieldLabel: {
+    fontSize: 12,
+    fontWeight: "500",
+    fontFamily: "Geist_500Medium",
+    letterSpacing: 0.4,
+    textTransform: "uppercase",
+    marginBottom: 8,
+  },
+  currencyRow: {
+    height: 50,
+    borderRadius: 12,
+    borderWidth: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingHorizontal: 16,
+  },
+  currencyLabel: {
+    flex: 1,
+    fontSize: 15,
+    fontFamily: "Geist_400Regular",
+  },
+  currencySymbol: {
+    fontSize: 15,
+    fontFamily: "Geist_400Regular",
+    fontWeight: "600",
   },
   footer: {
     position: "absolute",
