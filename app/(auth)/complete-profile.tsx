@@ -12,6 +12,7 @@ import { useAuthStore } from "../../src/presentation/stores/useAuthStore";
 import { useCurrencyStore } from "../../src/presentation/stores/useCurrencyStore";
 import { toast } from "sonner-native";
 import { ChevronRight, Globe } from "lucide-react-native";
+import { UserRepositoryImpl } from "../../src/data/repositories/UserRepositoryImpl";
 
 export default function CompleteProfileScreen() {
   const { colors } = useTheme();
@@ -38,7 +39,11 @@ export default function CompleteProfileScreen() {
     if (!canSubmit) return;
     setLoading(true);
     try {
-      // TODO: call update profile API and patch session user
+      await UserRepositoryImpl.completeProfile({
+        username,
+        phone: phone || undefined,
+        currency_id: selectedCurrency?.id,
+      });
       router.replace("/(tabs)");
     } catch (e) {
       toast.error("Failed to save profile. Please try again.");

@@ -30,10 +30,15 @@ export const useCurrencyStore = create<CurrencyState>()(
         set({ isLoading: true, error: null });
         try {
           const currencies = await CurrencyRepositoryImpl.getAll();
-          // Only set default if nothing was persisted
+          // Re-resolve selectedCurrency from fresh list using persisted code,
+          // falling back to IDR then first entry
+          const persistedCode = get().selectedCurrency?.code ?? null;
           const selected =
-            get().selectedCurrency ??
-            currencies.find((c) => c.code === "USD") ??
+            (persistedCode
+              ? currencies.find((c) => c.code === persistedCode)
+              : null) ??
+            currencies.find((c) => c.code === "IDR") ??
+            currencies[0] ??
             null;
           set({ currencies, selectedCurrency: selected, isLoading: false });
         } catch (e) {
@@ -42,7 +47,11 @@ export const useCurrencyStore = create<CurrencyState>()(
       },
 
       setCurrency: async (code) => {
-        const currency = await CurrencyRepositoryImpl.getByCode(code);
+        const all = get().currencies;
+        const currency =
+          all.find((c) => c.code === code.toUpperCase()) ??
+          (await CurrencyRepositoryImpl.getByCode(code)) ??
+          null;
         if (currency) {
           set({ selectedCurrency: currency });
         }
