@@ -1,6 +1,14 @@
 import React from "react";
-import { View, Text, ScrollView, Pressable, StyleSheet } from "react-native";
+import {
+  Clipboard,
+  View,
+  Text,
+  ScrollView,
+  Pressable,
+  StyleSheet,
+} from "react-native";
 import { ChevronLeft, Trash2 } from "lucide-react-native";
+import { toast } from "sonner-native";
 import { useTheme } from "../../core/theme";
 import { useLoggerStore, LogEntry, LogLevel } from "../stores/useLoggerStore";
 import { JsonHighlighter } from "./JsonHighlighter";
@@ -33,8 +41,21 @@ function LogItem({ entry }: { entry: LogEntry }) {
     second: "2-digit",
   });
 
+  const handleLongPress = () => {
+    const text = [
+      `[${entry.level.toUpperCase()}]${entry.tag ? ` [${entry.tag}]` : ""} ${timeLabel}`,
+      ...entry.messages.map((m) =>
+        typeof m === "string" ? m : JSON.stringify(m, null, 2),
+      ),
+    ].join("\n");
+    Clipboard.setString(text);
+    toast.success("Copied to clipboard");
+  };
+
   return (
-    <View
+    <Pressable
+      onLongPress={handleLongPress}
+      delayLongPress={400}
       style={[
         styles.logItem,
         {
@@ -63,7 +84,7 @@ function LogItem({ entry }: { entry: LogEntry }) {
           <JsonHighlighter key={idx} value={msg} />
         ))}
       </View>
-    </View>
+    </Pressable>
   );
 }
 

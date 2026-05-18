@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, ScrollView, Pressable, StyleSheet } from "react-native";
+import {
+  Clipboard,
+  View,
+  Text,
+  ScrollView,
+  Pressable,
+  StyleSheet,
+} from "react-native";
 import {
   ChevronLeft,
   Trash2,
@@ -9,6 +16,7 @@ import {
 import { useTheme } from "../../core/theme";
 import { useRepoLoggerStore, RepoLogEntry } from "../stores/useRepoLoggerStore";
 import { JsonHighlighter } from "./JsonHighlighter";
+import { toast } from "sonner-native";
 
 interface Props {
   onBack: () => void;
@@ -24,9 +32,44 @@ function LogItem({ entry, colors }: { entry: RepoLogEntry; colors: any }) {
     second: "2-digit",
   });
 
+  const handleLongPress = () => {
+    const parts: string[] = [
+      `${entry.repoClass}.${entry.functionName}() — ${timeLabel} (${entry.durationMs}ms)`,
+    ];
+    if (entry.parameters.length > 0) {
+      parts.push(
+        "Parameters:\n" +
+          entry.parameters
+            .map((p) =>
+              typeof p === "string" ? p : JSON.stringify(p, null, 2),
+            )
+            .join("\n"),
+      );
+    }
+    if (hasError) {
+      parts.push(
+        "Error:\n" +
+          (typeof entry.error === "string"
+            ? entry.error
+            : JSON.stringify(entry.error, null, 2)),
+      );
+    } else {
+      parts.push(
+        "Response:\n" +
+          (typeof entry.response === "string"
+            ? entry.response
+            : JSON.stringify(entry.response, null, 2)),
+      );
+    }
+    Clipboard.setString(parts.join("\n\n"));
+    toast.success("Copied to clipboard");
+  };
+
   return (
     <Pressable
       onPress={() => setExpanded((v) => !v)}
+      onLongPress={handleLongPress}
+      delayLongPress={400}
       style={[
         styles.logItem,
         {
