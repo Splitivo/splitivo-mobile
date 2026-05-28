@@ -16,6 +16,7 @@ interface AuthState {
   error: string | null;
   signIn: (provider: AuthProvider) => Promise<void>;
   signOut: () => Promise<void>;
+  markProfileComplete: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -42,6 +43,14 @@ export const useAuthStore = create<AuthState>()(
             isLoading: false,
           });
         }
+      },
+
+      markProfileComplete: () => {
+        set((state) => ({
+          session: state.session
+            ? { ...state.session, requiresProfileCompletion: false }
+            : null,
+        }));
       },
 
       signOut: async () => {

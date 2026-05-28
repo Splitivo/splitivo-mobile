@@ -9,6 +9,7 @@ import { GlassCard } from "../../src/presentation/components/GlassCard";
 import { router } from "expo-router";
 import { useTheme } from "../../src/core/theme";
 import { useAuthStore } from "../../src/presentation/stores/useAuthStore";
+import { useUserStore } from "../../src/presentation/stores/useUserStore";
 import { useCurrencyStore } from "../../src/presentation/stores/useCurrencyStore";
 import { toast } from "sonner-native";
 import { ChevronRight, Globe } from "lucide-react-native";
@@ -18,6 +19,8 @@ export default function CompleteProfileScreen() {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const session = useAuthStore((s) => s.session);
+  const markProfileComplete = useAuthStore((s) => s.markProfileComplete);
+  const setUser = useUserStore((s) => s.setUser);
 
   const [username, setUsername] = useState(session?.user.username ?? "");
   const [phone, setPhone] = useState(session?.user.phone ?? "");
@@ -39,11 +42,13 @@ export default function CompleteProfileScreen() {
     if (!canSubmit) return;
     setLoading(true);
     try {
-      await UserRepositoryImpl.completeProfile({
+      const user = await UserRepositoryImpl.completeProfile({
         username,
         phone: phone || undefined,
         currency_id: selectedCurrency?.id,
       });
+      setUser(user);
+      markProfileComplete();
       router.replace("/(tabs)");
     } catch (e) {
       toast.error("Failed to save profile. Please try again.");

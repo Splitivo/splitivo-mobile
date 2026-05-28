@@ -27,7 +27,7 @@ class UserRepositoryBase implements UserRepository {
     return this.datasource.searchParticipants(query);
   }
 
-  async completeProfile(payload: CompleteProfilePayload): Promise<void> {
+  async completeProfile(payload: CompleteProfilePayload): Promise<User> {
     const token = useAuthStore.getState().session?.accessToken;
     const { url, method } = buildUrl(
       ApiVersion.V1,
@@ -42,8 +42,28 @@ class UserRepositoryBase implements UserRepository {
       },
       body: JSON.stringify(payload),
     });
-    const json: HttpResp<unknown> = await res.json();
+    const json: HttpResp<{
+      uid: string;
+      username: string;
+      display_name: string;
+      email: string;
+      phone?: string;
+      avatar_url: string | null;
+      base_currency_id: number;
+      base_currency: { id: number; uid: string; code: string; name: string };
+    }> = await res.json();
     if (!res.ok) throw new Error(json.message || `Error ${res.status}`);
+    const d = json.data;
+    return {
+      id: d.uid,
+      username: d.username,
+      displayName: d.display_name,
+      email: d.email,
+      phone: d.phone,
+      avatarUrl: d.avatar_url ?? undefined,
+      baseCurrency: d.base_currency.code,
+      bankAccounts: [],
+    };
   }
 }
 

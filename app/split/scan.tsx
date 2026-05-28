@@ -1,20 +1,54 @@
-import React, { useState } from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import React, { useRef, useState } from "react";
+import { View, StyleSheet, Pressable, ActivityIndicator } from "react-native";
+import { CameraView, useCameraPermissions } from "expo-camera";
+import * as ImagePicker from "expo-image-picker";
 import { Text } from "../../src/presentation/components/Text";
 import { ScreenContainer } from "../../src/presentation/components/ScreenContainer";
 import { router } from "expo-router";
 import { useTheme } from "../../src/core/theme";
 import { Button } from "../../src/presentation/components/Button";
 import { ArrowLeft } from "lucide-react-native";
+import { toast } from "sonner-native";
 
 export default function ScanScreen() {
   const { colors } = useTheme();
   const [currency, setCurrency] = useState("USD");
   const [mode, setMode] = useState<"camera" | "gallery">("camera");
+  const [capturing, setCapturing] = useState(false);
+  const [permission, requestPermission] = useCameraPermissions();
+  const cameraRef = useRef<CameraView>(null);
 
-  const handleCapture = () => {
-    // Mock: go directly to confirm screen with scan result
-    router.push("/split/confirm");
+  const handleCapture = async () => {
+    if (mode === "gallery") {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ["images"],
+        quality: 0.9,
+        allowsEditing: false,
+      });
+      if (!result.canceled && result.assets.length > 0) {
+        router.push({
+          pathname: "/split/confirm",
+          params: { imageUri: result.assets[0].uri },
+        });
+      }
+      return;
+    }
+
+    if (!cameraRef.current) return;
+    setCapturing(true);
+    try {
+      const photo = await cameraRef.current.takePictureAsync({ quality: 0.9 });
+      if (photo?.uri) {
+        router.push({
+          pathname: "/split/confirm",
+          params: { imageUri: photo.uri },
+        });
+      }
+    } catch {
+      toast.error("Could not capture photo. Try using Gallery instead.");
+    } finally {
+      setCapturing(false);
+    }
   };
 
   return (
@@ -39,15 +73,58 @@ export default function ScanScreen() {
         </Pressable>
       </View>
 
-      {/* Camera Viewfinder Placeholder */}
+      {/* Camera Viewfinder */}
       <View style={styles.viewfinder}>
-        <View
-          style={[styles.scanFrame, { borderColor: colors.accent.primary }]}
-        >
-          <Text style={[styles.scanText, { color: colors.text.secondary }]}>
-            Point camera at receipt
-          </Text>
-        </View>
+        {mode === "camera" ? (
+          permission == null ? (
+            <ActivityIndicator color={colors.accent.primary} />
+          ) : !permission.granted ? (
+            <View style={styles.permissionBox}>
+              <Text
+                style={[
+                  styles.permissionText,
+                  { color: colors.text.secondary },
+                ]}
+              >
+                Camera access is required to scan receipts.
+              </Text>
+              <Button
+                title="Grant Permission"
+                onPress={requestPermission}
+                size="md"
+              />
+            </View>
+          ) : (
+            <View style={styles.cameraContainer}>
+              <CameraView
+                ref={cameraRef}
+                style={StyleSheet.absoluteFill}
+                facing="back"
+                mode="picture"
+              />
+              {/* Receipt guide frame — sibling of CameraView, not a child */}
+              <View style={styles.overlay} pointerEvents="none">
+                <View
+                  style={[
+                    styles.scanFrame,
+                    { borderColor: colors.accent.primary },
+                  ]}
+                />
+              </View>
+            </View>
+          )
+        ) : (
+          <View
+            style={[
+              styles.galleryPlaceholder,
+              { backgroundColor: colors.bg.container },
+            ]}
+          >
+            <Text style={{ color: colors.text.secondary, fontSize: 15 }}>
+              Tap "Choose from Gallery" below
+            </Text>
+          </View>
+        )}
       </View>
 
       {/* Controls */}
@@ -93,7 +170,22 @@ export default function ScanScreen() {
           </Pressable>
         </View>
 
-        <Button title="Capture" onPress={handleCapture} fullWidth size="lg" />
+        <Button
+          title={
+            capturing
+              ? "Capturing…"
+              : mode === "gallery"
+                ? "Choose from Gallery"
+                : "Capture"
+          }
+          onPress={handleCapture}
+          fullWidth
+          size="lg"
+          disabled={
+            capturing ||
+            (mode === "camera" && (!permission || !permission.granted))
+          }
+        />
 
         <Pressable onPress={() => router.push("/split/manual-entry")}>
           <Text style={[styles.manualLink, { color: colors.accent.primary }]}>
@@ -106,7 +198,6 @@ export default function ScanScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -117,17 +208,34 @@ const styles = StyleSheet.create({
   headerTitle: { fontSize: 17, fontWeight: "600" },
   currencyPill: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20 },
   currencyText: { fontSize: 14, fontWeight: "600" },
-  viewfinder: { flex: 1, justifyContent: "center", alignItems: "center" },
-  scanFrame: {
-    width: "80%",
-    aspectRatio: 0.7,
-    borderWidth: 2,
-    borderRadius: 16,
-    borderStyle: "dashed",
+  viewfinder: { flex: 1 },
+  cameraContainer: { flex: 1 },
+  camera: { flex: 1 },
+  overlay: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-  scanText: { fontSize: 14 },
+  scanFrame: {
+    width: "75%",
+    aspectRatio: 0.65,
+    borderWidth: 2,
+    borderRadius: 16,
+    borderStyle: "dashed",
+  },
+  permissionBox: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 32,
+    gap: 16,
+  },
+  permissionText: { fontSize: 14, textAlign: "center" },
+  galleryPlaceholder: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   controls: {
     paddingHorizontal: 24,
     paddingBottom: 32,

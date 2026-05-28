@@ -104,6 +104,7 @@ module.exports = {
             "./src/services/auth/client_101209994670-9t9qc1onn47n9j52g83o9qik77ur3d12.apps.googleusercontent.com.plist",
         },
       ],
+      "./plugins/withRocketSimConnect.js",
     ],
   },
 };

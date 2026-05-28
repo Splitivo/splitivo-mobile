@@ -7,6 +7,7 @@ interface UserState {
   isLoading: boolean;
   error: string | null;
   fetchUser: () => Promise<void>;
+  setUser: (user: User) => void;
   updateUser: (update: Partial<User>) => Promise<void>;
   addBankAccount: (account: Omit<BankAccount, "id">) => Promise<void>;
   removeBankAccount: (accountId: string) => Promise<void>;
@@ -27,6 +28,8 @@ export const useUserStore = create<UserState>((set, get) => ({
       set({ error: (e as Error).message, isLoading: false });
     }
   },
+
+  setUser: (user) => set({ user }),
 
   updateUser: async (update) => {
     set({ isLoading: true, error: null });

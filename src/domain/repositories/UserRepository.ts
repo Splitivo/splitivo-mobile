@@ -10,5 +10,5 @@ export interface UserRepository {
   getCurrentUser(): Promise<User>;
   updateUser(user: Partial<User>): Promise<User>;
   searchParticipants(query: string): Promise<Participant[]>;
-  completeProfile(payload: CompleteProfilePayload): Promise<void>;
+  completeProfile(payload: CompleteProfilePayload): Promise<User>;
 }

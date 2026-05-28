@@ -16,8 +16,9 @@ export default function SplitLayout() {
       <Stack.Screen name="scan" />
       <Stack.Screen name="manual-entry" />
       <Stack.Screen name="confirm" />
-      <Stack.Screen name="result" />
-      <Stack.Screen name="[id]" />
+      <Stack.Screen name="[id]/index" />
+      <Stack.Screen name="[id]/bill-detail" />
+      <Stack.Screen name="[id]/receipt" />
     </Stack>
   );
 }
